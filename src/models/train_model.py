@@ -4,10 +4,9 @@ import torch
 import torch.nn as nn
 from torch import optim
 
-from model import MyAwesomeModel
+from model import ResNeStModel
 
 path = "data/processed"
-model_checkpoint = "models/trained_model.pth"
 visual_path = "reports/figures"
 
 batch_size = 64
@@ -40,9 +39,7 @@ def train():
         val_dataset, batch_size=batch_size, shuffle=True
     )
 
-    _, _, H, W = next(iter(train_loader))[0].shape
-
-    model = MyAwesomeModel(H, W)
+    model = ResNeStModel()
     model.to(device)
     model.apply(init_weights)
 
