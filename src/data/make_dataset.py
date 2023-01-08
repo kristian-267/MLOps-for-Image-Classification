@@ -9,6 +9,11 @@ from dotenv import find_dotenv, load_dotenv
 from torchvision import datasets, transforms
 
 
+CROPSIZE = 224
+IMGNET_MEAN = [0.485, 0.456, 0.406]
+IMGNET_STD = [0.229, 0.224, 0.225]
+
+
 @click.command()
 @click.argument("input_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path())
