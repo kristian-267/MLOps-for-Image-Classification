@@ -1,6 +1,8 @@
 # DTU-MLOps-Group7
 
-Project repository for DTU 02476 - MLOps courses in January 2023
+Project repository for DTU 02476 - MLOps courses in January 2023.
+
+Authors: Chuansheng Liu, Xindi Wu, Chongchong Li, Mouadh Sadani
 
 ## Project Description
  
