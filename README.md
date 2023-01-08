@@ -1,10 +1,8 @@
 # DTU-MLOps-Group7
-==============================
 
 Project repository for DTU 02476 - MLOps courses in January 2023
 
 ## Project Description
-------------
  
 #### Overall goal of the project
 The goal of the project is to use convolutional neural network-based architecture to classify images in computer vision.      
@@ -22,7 +20,6 @@ We are going to use [ImageNet 1000 (mini)](https://www.kaggle.com/datasets/ifigo
 The model we expect to use is [ResNeSt](https://arxiv.org/pdf/2004.08955.pdf). It is a ResNet variant which stacking several Split-Attention blocks (conposed by featuremap group and split attention operations). It is easy to work with, computational efficient, and universally improves the learned feature representations to boost performance across image classification.
 
 ## Project Organization
-------------
 
     ├── LICENSE
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
@@ -70,6 +67,5 @@ The model we expect to use is [ResNeSt](https://arxiv.org/pdf/2004.08955.pdf). I
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
 
---------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
