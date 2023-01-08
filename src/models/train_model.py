@@ -8,14 +8,16 @@ from model import ResNeStModel
 
 path = "data/processed"
 visual_path = "reports/figures"
+model_checkpoint = "models/trained_model.pth"
 
 batch_size = 64
-epoch = 1
+epoch = 270
 eval_every = 100
-stop_after = 30
+stop_after = 4
 
-decay = 1e-5
-lr = 1e-3
+decay = 1e-4
+momentum = 0.9
+lr = 1e-2
 
 criterion = nn.NLLLoss()
 
@@ -43,7 +45,7 @@ def train():
     model.to(device)
     model.apply(init_weights)
 
-    optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=decay)
+    optimizer = optim.SGD(model.parameters(), lr=lr, weight_decay=decay, momentum=momentum)
 
     train_losses, eval_losses, accuracies, steps = [], [], [], []
     train_loss = 0
@@ -57,7 +59,7 @@ def train():
             labels = labels.to(device)
 
             optimizer.zero_grad()
-            output = model(images)
+            output = nn.LogSoftmax(dim=1)(model(images))
             loss = criterion(output, labels)
             loss.backward()
             optimizer.step()
@@ -84,10 +86,7 @@ def train():
 
                 if count >= stop_after:
                     print("It's time for early stopping. Let's save the model!")
-                    torch.save(
-                        {"model_state_dict": model.state_dict(), "H": H, "W": W},
-                        model_checkpoint,
-                    )
+                    torch.save(model.state_dict(), model_checkpoint,)
                     break
 
             step += 1
@@ -98,9 +97,7 @@ def train():
         break
     else:
         print("Finish training and save the model.")
-        torch.save(
-            {"model_state_dict": model.state_dict(), "H": H, "W": W}, model_checkpoint
-        )
+        torch.save(model.state_dict(), model_checkpoint,)
 
     plot_results(train_losses, eval_losses, accuracies, steps, step)
 
@@ -139,7 +136,7 @@ def eval_steps(model, dataloader):
             images = images.to(device)
             labels = labels.to(device)
 
-            output = model(images)
+            output = nn.LogSoftmax(dim=1)(model(images))
             loss = criterion(output, labels)
             eval_loss += loss.item()
             accuracy += calc_accuracy(output, labels)
