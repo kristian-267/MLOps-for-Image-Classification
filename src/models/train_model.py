@@ -10,7 +10,7 @@ path = "data/processed"
 visual_path = "reports/figures"
 model_checkpoint = "models/trained_model.pth"
 
-batch_size = 64
+batch_size = 512
 epoch = 270
 eval_every = 100
 stop_after = 4
@@ -21,13 +21,19 @@ lr = 1e-3
 
 criterion = nn.NLLLoss()
 
+'''
 if torch.backends.mps.is_available():
     device = torch.device("mps")
 elif torch.cuda.is_available():
     device = torch.device("cuda")
 else:
     device = torch.device("cpu")
+'''
 
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+else:
+    device = torch.device("cpu")
 
 def train():
     train_dataset = torch.load(path + "/train_dataset.pt")
