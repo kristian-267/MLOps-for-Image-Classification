@@ -17,7 +17,7 @@ stop_after = 4
 
 decay = 1e-4
 momentum = 0.9
-lr = 1e-2
+lr = batch_size / 16 * 0.1
 
 criterion = nn.NLLLoss()
 
@@ -51,7 +51,10 @@ def train():
     model.to(device)
     model.apply(init_weights)
 
+    iters = len(train_loader)
+
     optimizer = optim.SGD(model.parameters(), lr=lr, weight_decay=decay, momentum=momentum)
+    scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=5)
 
     train_losses, eval_losses, accuracies, steps = [], [], [], []
     train_loss = 0
@@ -60,10 +63,12 @@ def train():
 
     model.train()
     for e in range(epoch):
+        i = 0
         for images, labels in train_loader:
             images = images.to(device)
             labels = labels.to(device)
 
+            scheduler.step(e + i / iters)
             optimizer.zero_grad()
             output = nn.LogSoftmax(dim=1)(model(images))
             loss = criterion(output, labels)
@@ -72,6 +77,8 @@ def train():
 
             train_loss += loss.item()
             train_losses.append(train_loss / (step + 1))
+
+            i += 1
 
             if step % eval_every == 0:
                 steps.append(step)
