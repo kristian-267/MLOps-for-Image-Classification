@@ -26,13 +26,13 @@ def main(input_filepath, output_filepath):
 
     traindir = os.path.join(input_filepath, "train")
     valdir = os.path.join(input_filepath, "val")
-    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    normalize = transforms.Normalize(mean=IMGNET_MEAN, std=IMGNET_STD)
 
     train_dataset = datasets.ImageFolder(
         traindir,
         transforms.Compose(
             [
-                transforms.RandomResizedCrop(224),
+                transforms.RandomResizedCrop(CROPSIZE),
                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
                 normalize,
@@ -45,7 +45,7 @@ def main(input_filepath, output_filepath):
         transforms.Compose(
             [
                 transforms.Resize(256),
-                transforms.CenterCrop(224),
+                transforms.CenterCrop(CROPSIZE),
                 transforms.ToTensor(),
                 normalize,
             ]

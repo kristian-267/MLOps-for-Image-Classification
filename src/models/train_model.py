@@ -17,7 +17,7 @@ stop_after = 4
 
 decay = 1e-4
 momentum = 0.9
-lr = 1e-2
+lr = 1e-3
 
 criterion = nn.NLLLoss()
 

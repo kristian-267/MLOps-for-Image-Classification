@@ -31,7 +31,7 @@ data: requirements
 
 ## Make Train
 train: requirements
-	$(PYTHON_INTERPRETER) src/models/train_model.py train
+	$(PYTHON_INTERPRETER) src/models/train_model.py
 
 ## Make Prediction
 predict: requirements

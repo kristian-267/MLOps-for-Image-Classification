@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from sklearn.manifold import TSNE
 
-from models.model import ResNeStModel
+from src.models.model import ResNeStModel
 
 path = "data/processed"
 visual_path = "reports/figures"
