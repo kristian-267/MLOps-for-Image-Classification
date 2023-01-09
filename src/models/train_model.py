@@ -17,7 +17,7 @@ stop_after = 4
 
 decay = 1e-4
 momentum = 0.9
-lr = 1e-3
+lr = 1e-2
 
 criterion = nn.NLLLoss()
 
@@ -82,7 +82,7 @@ def train():
                 accuracies.append(accuracy)
 
                 print(
-                    f"Epoch: {e}/{epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]}\tEval Loss: {eval_losses[-1]}\tAccuracy: {accuracies[-1]}%"
+                    f"Epoch: {e}/{epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
                 )
 
                 if len(accuracies) > 1 and accuracies[-1] <= accuracies[-2]:
