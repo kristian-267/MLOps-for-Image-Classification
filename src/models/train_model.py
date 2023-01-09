@@ -11,14 +11,15 @@ visual_path = "reports/figures"
 model_checkpoint = "models/trained_model.pth"
 
 batch_size = 256
-epoch = 270
+epoch = 300
 eval_every = 100
 stop_after = 4
 
 decay = 1e-4
 momentum = 0.9
-lr_max = batch_size / 128 * 0.1
-lr_min = 0.01
+lr = 0.1
+lr_epoch = [90, 165, 225, 270]
+lr_decay = 0.5
 
 criterion = nn.NLLLoss()
 
@@ -52,10 +53,8 @@ def train():
     model.to(device)
     model.apply(init_weights)
 
-    iters = len(train_loader)
-
-    optimizer = optim.SGD(model.parameters(), lr=lr_max, weight_decay=decay, momentum=momentum)
-    scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=5, eta_min=lr_min)
+    optimizer = optim.SGD(model.parameters(), lr=lr, weight_decay=decay, momentum=momentum)
+    scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=lr_epoch, gamma=lr_decay)
 
     train_losses, eval_losses, accuracies, steps = [], [], [], []
     train_loss = 0
@@ -64,12 +63,10 @@ def train():
 
     model.train()
     for e in range(epoch):
-        i = 0
         for images, labels in train_loader:
             images = images.to(device)
             labels = labels.to(device)
 
-            scheduler.step(e + i / iters)
             optimizer.zero_grad()
             output = nn.LogSoftmax(dim=1)(model(images))
             loss = criterion(output, labels)
@@ -78,8 +75,6 @@ def train():
 
             train_loss += loss.item()
             train_losses.append(train_loss / (step + 1))
-
-            i += 1
 
             if step % eval_every == 0:
                 steps.append(step)
@@ -107,6 +102,7 @@ def train():
             step += 1
 
         else:
+            scheduler.step()
             continue
 
         break
