@@ -3,4 +3,4 @@ import timm
 
 def ResNeStModel():
     
-    return timm.create_model('resnest14d', pretrained=False)
+    return timm.create_model('resnest50d', pretrained=False)

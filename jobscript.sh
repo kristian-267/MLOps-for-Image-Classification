@@ -7,6 +7,13 @@
  #BSUB -R "rusage[mem=32GB]"
  #BSUB -o logs/%J.out
  #BSUB -e logs/%J.err
- <loading of modules, dependencies etc.>
+
+ module load python3/3.7.10
+ module load cuda/11.5
+ module load cudnn
+ module load ffmpeg
+
+ pip3 install torch==1.9.1+cu111 torchvision==0.10.1+cu111 torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html
+
  echo "Running script..."
- python3 src/models/train_model.py
+ make train

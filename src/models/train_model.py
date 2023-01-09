@@ -10,14 +10,15 @@ path = "data/processed"
 visual_path = "reports/figures"
 model_checkpoint = "models/trained_model.pth"
 
-batch_size = 512
+batch_size = 256
 epoch = 270
 eval_every = 100
 stop_after = 4
 
 decay = 1e-4
 momentum = 0.9
-lr = batch_size / 16 * 0.1
+lr_max = batch_size / 128 * 0.1
+lr_min = 0.01
 
 criterion = nn.NLLLoss()
 
@@ -53,8 +54,8 @@ def train():
 
     iters = len(train_loader)
 
-    optimizer = optim.SGD(model.parameters(), lr=lr, weight_decay=decay, momentum=momentum)
-    scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=5)
+    optimizer = optim.SGD(model.parameters(), lr=lr_max, weight_decay=decay, momentum=momentum)
+    scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=5, eta_min=lr_min)
 
     train_losses, eval_losses, accuracies, steps = [], [], [], []
     train_loss = 0
@@ -99,9 +100,10 @@ def train():
 
                 if count >= stop_after:
                     print("It's time for early stopping. Let's save the model!")
+                    step += 1
                     torch.save(model.state_dict(), model_checkpoint,)
                     break
-
+            
             step += 1
 
         else:
@@ -138,7 +140,7 @@ def evaluate(model, val_loader):
     eval_loss, accuracy = eval_steps(model, val_loader)
     model.train()
 
-    return eval_loss.cpu(), accuracy
+    return eval_loss, accuracy
 
 
 def eval_steps(model, dataloader):
@@ -157,7 +159,7 @@ def eval_steps(model, dataloader):
         eval_loss = eval_loss / len(dataloader)
         accuracy = accuracy.item() / len(dataloader) * 100
 
-    return loss, accuracy
+    return eval_loss, accuracy
 
 
 def plot_results(train_losses, eval_losses, accuracies, steps, step):
