@@ -17,7 +17,7 @@ stop_after = 4
 
 decay = 1e-4
 momentum = 0.9
-lr = 0.1
+lr = 0.01
 lr_epoch = [90, 165, 225, 270]
 lr_decay = 0.5
 
@@ -88,7 +88,7 @@ def train():
                     f"Epoch: {e}/{epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
                 )
 
-                if len(accuracies) > 1 and accuracies[-1] <= accuracies[-2]:
+                if len(eval_losses) > 1 and eval_losses[-1] <= eval_losses[-2]:
                     count += 1
                 else:
                     count = 0
@@ -96,7 +96,7 @@ def train():
                 if count >= stop_after:
                     print("It's time for early stopping. Let's save the model!")
                     step += 1
-                    torch.save(model.state_dict(), model_checkpoint,)
+                    torch.save(model.state_dict(), model_checkpoint)
                     break
             
             step += 1

@@ -140,9 +140,6 @@ venv.bak/
 # mkdocs documentation
 /site
 
-# exclude data from source control by default
-# /data/
-
 # Mac OS-specific storage files
 .DS_Store
 
@@ -153,3 +150,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+/models
