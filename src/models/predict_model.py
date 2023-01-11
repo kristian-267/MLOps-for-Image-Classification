@@ -1,15 +1,15 @@
 import glob
+import logging
 import os
 
 import cv2
+import hydra
 import numpy as np
 import torch
 import torch.nn as nn
-import hydra
-import logging
-
 from model import ResNeStModel
-from data.make_dataset import IMGNET_MEAN, IMGNET_STD, CROPSIZE
+
+from data.make_dataset import CROPSIZE, IMGNET_MEAN, IMGNET_STD
 
 if torch.backends.mps.is_available():
     device = torch.device("mps")
@@ -21,14 +21,14 @@ else:
 IMAGE_EXT = [".png", "jpg", ".jpeg", ".PNG", ".JPG", ".JPEG"]
 
 
-@hydra.main(config_path="../../conf", config_name='config.yaml')
+@hydra.main(config_path="../../conf", config_name="config.yaml")
 def predict(config):
     models = config.visualization
     paths = config.paths
 
     logger = logging.getLogger(__name__)
 
-    checkpoint = torch.load(paths.model_path + f'checkpoint_{models.name}.pth')
+    checkpoint = torch.load(paths.model_path + f"checkpoint_{models.name}.pth")
     model = ResNeStModel()
     model.to(device)
     model.load_state_dict(checkpoint["model_state_dict"])
@@ -43,7 +43,11 @@ def predict(config):
         if file_extension in IMAGE_EXT:
             img = cv2.imread(file)
             img = cv2.normalize(
-                cv2.resize(img, CROPSIZE), None, IMGNET_MEAN, IMGNET_STD, cv2.NORM_MINMAX
+                cv2.resize(img, CROPSIZE),
+                None,
+                IMGNET_MEAN,
+                IMGNET_STD,
+                cv2.NORM_MINMAX,
             ).T
             img = img[np.newaxis, :, :, :]
 

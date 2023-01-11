@@ -1,11 +1,10 @@
+import hydra
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from sklearn.manifold import TSNE
-import hydra
 
 from models.model import ResNeStModel
-
 
 if torch.backends.mps.is_available():
     device = torch.device("mps")
@@ -15,7 +14,7 @@ else:
     device = torch.device("cpu")
 
 
-@hydra.main(config_path="../../conf", config_name='config.yaml')
+@hydra.main(config_path="../../conf", config_name="config.yaml")
 def visual_tsne(config):
     models = config.visualization
     paths = config.paths
@@ -25,7 +24,7 @@ def visual_tsne(config):
         train_dataset, batch_size=models.batch_size, shuffle=False
     )
 
-    checkpoint = torch.load(paths.model_path + f'checkpoint_{models.name}.pth')
+    checkpoint = torch.load(paths.model_path + f"checkpoint_{models.name}.pth")
 
     model = ResNeStModel()
     model.to(device)

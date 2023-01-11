@@ -3,18 +3,17 @@ import logging
 import os
 from pathlib import Path
 
+import hydra
 import torch
 from dotenv import find_dotenv, load_dotenv
 from torchvision import datasets, transforms
-import hydra
-
 
 CROPSIZE = 224
 IMGNET_MEAN = [0.485, 0.456, 0.406]
 IMGNET_STD = [0.229, 0.224, 0.225]
 
 
-@hydra.main(config_path="../../conf", config_name='config.yaml')
+@hydra.main(config_path="../../conf", config_name="config.yaml")
 def main(config):
     """Runs data processing scripts to turn raw data from (../raw) into
     cleaned data ready to be analyzed (saved in ../processed).
@@ -29,7 +28,17 @@ def main(config):
     valdir = os.path.join(paths.raw_data_path + data.name, "val")
     normalize = transforms.Normalize(mean=IMGNET_MEAN, std=IMGNET_STD)
 
-    train_dataset = datasets.ImageFolder(traindir, transforms.Compose([transforms.RandomResizedCrop(CROPSIZE), transforms.RandomHorizontalFlip(), transforms.ToTensor(), normalize]))
+    train_dataset = datasets.ImageFolder(
+        traindir,
+        transforms.Compose(
+            [
+                transforms.RandomResizedCrop(CROPSIZE),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                normalize,
+            ]
+        ),
+    )
 
     val_dataset = datasets.ImageFolder(
         valdir,

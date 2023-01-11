@@ -1,30 +1,30 @@
+import logging
+
+import hydra
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn as nn
-from torch import optim
-import hydra
-import logging
-from torch.profiler import profile, ProfilerActivity
-
 from model import ResNeStModel
+from torch import optim
+from torch.profiler import ProfilerActivity, profile
 
-
-'''
+"""
 if torch.backends.mps.is_available():
     device = torch.device("mps")
 elif torch.cuda.is_available():
     device = torch.device("cuda")
 else:
     device = torch.device("cpu")
-'''
+"""
 
 if torch.cuda.is_available():
     device = torch.device("cuda")
 else:
     device = torch.device("cpu")
 
-@hydra.main(config_path="../../conf", config_name='config.yaml')
+
+@hydra.main(config_path="../../conf", config_name="config.yaml")
 def train(config):
     hparams = config.experiment
     paths = config.paths
@@ -47,8 +47,15 @@ def train(config):
     model.apply(init_weights)
 
     criterion = getattr(torch.nn, hparams.criterion)()
-    optimizer = getattr(optim, hparams.optimizer)(model.parameters(), lr=hparams.lr, weight_decay=hparams.decay, momentum=hparams.momentum)
-    scheduler = getattr(optim.lr_scheduler, hparams.scheduler)(optimizer, milestones=hparams.lr_epoch, gamma=hparams.lr_decay)
+    optimizer = getattr(optim, hparams.optimizer)(
+        model.parameters(),
+        lr=hparams.lr,
+        weight_decay=hparams.decay,
+        momentum=hparams.momentum,
+    )
+    scheduler = getattr(optim.lr_scheduler, hparams.scheduler)(
+        optimizer, milestones=hparams.lr_epoch, gamma=hparams.lr_decay
+    )
 
     train_losses, eval_losses, accuracies, steps = [], [], [], []
     train_loss = 0
@@ -56,7 +63,15 @@ def train(config):
     count = 0
 
     model.train()
-    with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA], schedule=torch.profiler.schedule(skip_first=90, wait=70, warmup=10, active=20), record_shapes=True, profile_memory=True, on_trace_ready=torch.profiler.tensorboard_trace_handler(paths.profiles + hparams.name)) as prof:
+    with profile(
+        activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
+        schedule=torch.profiler.schedule(skip_first=90, wait=70, warmup=10, active=20),
+        record_shapes=True,
+        profile_memory=True,
+        on_trace_ready=torch.profiler.tensorboard_trace_handler(
+            paths.profiles + hparams.name
+        ),
+    ) as prof:
         for e in range(hparams.epoch):
             for images, labels in train_loader:
                 images = images.to(device)
@@ -89,11 +104,16 @@ def train(config):
                         count = 0
 
                     if count >= hparams.stop_after:
-                        logger.info("It's time for early stopping. Let's save the model!")
+                        logger.info(
+                            "It's time for early stopping. Let's save the model!"
+                        )
                         step += 1
-                        torch.save(model.state_dict(), paths.model_path + f'checkpoint_{hparams.name}.pth')
+                        torch.save(
+                            model.state_dict(),
+                            paths.model_path + f"checkpoint_{hparams.name}.pth",
+                        )
                         break
-                
+
                 step += 1
                 prof.step()
 
@@ -105,11 +125,17 @@ def train(config):
         else:
             logger.info(
                 f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
-                )
+            )
             logger.info("Finish training and save the model.")
-            torch.save(model.state_dict(), paths.model_path + f'checkpoint_{hparams.name}.pth')
+            torch.save(
+                model.state_dict(), paths.model_path + f"checkpoint_{hparams.name}.pth"
+            )
 
-    logger.info(prof.key_averages(group_by_input_shape=True).table(sort_by="cpu_time_total", row_limit=30))
+    logger.info(
+        prof.key_averages(group_by_input_shape=True).table(
+            sort_by="cpu_time_total", row_limit=30
+        )
+    )
     prof.export_chrome_trace(paths.profiles + f"{hparams.name}/trace.json")
 
     plot_results(train_losses, eval_losses, accuracies, steps, step, config)
