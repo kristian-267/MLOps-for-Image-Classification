@@ -10,6 +10,7 @@ paths:
   external_data_path: "data/raw/"
   visual_path: "reports/figures/"
   model_path: "models/"
+  profile_path: "profiles/"
 
 hydra:
   job:

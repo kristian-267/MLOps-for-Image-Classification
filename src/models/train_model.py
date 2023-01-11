@@ -5,6 +5,7 @@ import torch.nn as nn
 from torch import optim
 import hydra
 import logging
+from torch.profiler import profile, ProfilerActivity
 
 from model import ResNeStModel
 
@@ -55,56 +56,61 @@ def train(config):
     count = 0
 
     model.train()
-    for e in range(hparams.epoch):
-        for images, labels in train_loader:
-            images = images.to(device)
-            labels = labels.to(device)
+    with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA], schedule=torch.profiler.schedule(skip_first=90, wait=70, warmup=10, active=20), record_shapes=True, profile_memory=True, on_trace_ready=torch.profiler.tensorboard_trace_handler(paths.profiles + hparams.name)) as prof:
+        for e in range(hparams.epoch):
+            for images, labels in train_loader:
+                images = images.to(device)
+                labels = labels.to(device)
 
-            optimizer.zero_grad()
-            output = nn.LogSoftmax(dim=1)(model(images))
-            loss = criterion(output, labels)
-            loss.backward()
-            optimizer.step()
+                optimizer.zero_grad()
+                output = nn.LogSoftmax(dim=1)(model(images))
+                loss = criterion(output, labels)
+                loss.backward()
+                optimizer.step()
 
-            train_loss += loss.item()
-            train_losses.append(train_loss / (step + 1))
+                train_loss += loss.item()
+                train_losses.append(train_loss / (step + 1))
 
-            if step % hparams.eval_every == 0:
-                steps.append(step)
+                if step % hparams.eval_every == 0:
+                    steps.append(step)
 
-                eval_loss, accuracy = evaluate(model, val_loader, criterion)
+                    eval_loss, accuracy = evaluate(model, val_loader, criterion)
 
-                eval_losses.append(eval_loss)
-                accuracies.append(accuracy)
+                    eval_losses.append(eval_loss)
+                    accuracies.append(accuracy)
 
-                logger.info(
-                    f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
-                )
+                    logger.info(
+                        f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
+                    )
 
-                if len(eval_losses) > 1 and eval_losses[-1] <= eval_losses[-2]:
-                    count += 1
-                else:
-                    count = 0
+                    if len(eval_losses) > 1 and eval_losses[-1] <= eval_losses[-2]:
+                        count += 1
+                    else:
+                        count = 0
 
-                if count >= hparams.stop_after:
-                    logger.info("It's time for early stopping. Let's save the model!")
-                    step += 1
-                    torch.save(model.state_dict(), paths.model_path + f'checkpoint_{hparams.name}.pth')
-                    break
-            
-            step += 1
+                    if count >= hparams.stop_after:
+                        logger.info("It's time for early stopping. Let's save the model!")
+                        step += 1
+                        torch.save(model.state_dict(), paths.model_path + f'checkpoint_{hparams.name}.pth')
+                        break
+                
+                step += 1
+                prof.step()
 
+            else:
+                scheduler.step()
+                continue
+
+            break
         else:
-            scheduler.step()
-            continue
+            logger.info(
+                f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
+                )
+            logger.info("Finish training and save the model.")
+            torch.save(model.state_dict(), paths.model_path + f'checkpoint_{hparams.name}.pth')
 
-        break
-    else:
-        logger.info(
-            f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
-            )
-        logger.info("Finish training and save the model.")
-        torch.save(model.state_dict(), paths.model_path + f'checkpoint_{hparams.name}.pth')
+    logger.info(prof.key_averages(group_by_input_shape=True).table(sort_by="cpu_time_total", row_limit=30))
+    prof.export_chrome_trace(paths.profiles + f"{hparams.name}/trace.json")
 
     plot_results(train_losses, eval_losses, accuracies, steps, step, config)
 
