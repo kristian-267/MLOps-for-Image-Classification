@@ -1,6 +1,4 @@
 [core]
     remote = storage
-    autostage = true
 ['remote "storage"']
-    url = gdrive://1IOjKlaqXVDTj3eozXB9GTzP6dZmyFX_t
-    gdrive_service_account_user_email = kristianr2607@gmail.com
+    url = gdrive://1f7g7cEBaQMV59ab-aOi_zEvBZL-IxaQc
