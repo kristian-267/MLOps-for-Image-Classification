@@ -1,11 +1,13 @@
 import glob
 import os
 
-import click
 import cv2
 import numpy as np
 import torch
 import torch.nn as nn
+import hydra
+import logging
+
 from model import ResNeStModel
 from data.make_dataset import IMGNET_MEAN, IMGNET_STD, CROPSIZE
 
@@ -19,17 +21,20 @@ else:
 IMAGE_EXT = [".png", "jpg", ".jpeg", ".PNG", ".JPG", ".JPEG"]
 
 
-@click.command()
-@click.argument("model_checkpoint", type=click.File("rb"))
-@click.argument("input_filepath", type=click.Path(exists=True))
-def predict(model_checkpoint, input_filepath):
-    checkpoint = torch.load(model_checkpoint)
+@hydra.main(config_path="../../conf", config_name='config.yaml')
+def predict(config):
+    models = config.visualization
+    paths = config.paths
+
+    logger = logging.getLogger(__name__)
+
+    checkpoint = torch.load(paths.model_path + f'checkpoint_{models.name}.pth')
     model = ResNeStModel()
     model.to(device)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
 
-    files = glob.glob(input_filepath + "/*.*")
+    files = glob.glob(paths.external_data_path + "*.*")
     images = []
     labels = []
     for file in files:
@@ -73,12 +78,9 @@ def predict(model_checkpoint, input_filepath):
         ps = torch.exp(output)
         _, top_class = ps.topk(1, dim=1)
 
-        print(f"The prediction of image {label} is: {top_class.item()}")
+        logger.info(f"The prediction of image {label} is: {top_class.item()}")
 
 
 if __name__ == "__main__":
-    # model_checkpoint = 'models/trained_model.pth'
-    # input_filepath = 'data/external'
-    # predict(model_checkpoint, input_filepath)
 
     predict()

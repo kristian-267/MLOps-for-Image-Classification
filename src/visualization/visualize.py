@@ -1,13 +1,11 @@
-import click
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from sklearn.manifold import TSNE
+import hydra
 
-from src.models.model import ResNeStModel
+from models.model import ResNeStModel
 
-path = "data/processed"
-visual_path = "reports/figures"
 
 if torch.backends.mps.is_available():
     device = torch.device("mps")
@@ -16,18 +14,18 @@ elif torch.cuda.is_available():
 else:
     device = torch.device("cpu")
 
-batch_size = 64
 
+@hydra.main(config_path="../../conf", config_name='config.yaml')
+def visual_tsne(config):
+    models = config.visualization
+    paths = config.paths
 
-@click.command()
-@click.argument("model_checkpoint", type=click.File("rb"))
-def visual_tsne(model_checkpoint):
-    train_dataset = torch.load(path + "/train_dataset.pt")
+    train_dataset = torch.load(paths.processed_data_path + "train_dataset.pt")
     train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=batch_size, shuffle=False
+        train_dataset, batch_size=models.batch_size, shuffle=False
     )
 
-    checkpoint = torch.load(model_checkpoint)
+    checkpoint = torch.load(paths.model_path + f'checkpoint_{models.name}.pth')
 
     model = ResNeStModel()
     model.to(device)
@@ -84,11 +82,11 @@ def visual_tsne(model_checkpoint):
 
         ax.scatter(current_tx, current_ty, c=color, label=label)
 
-    plt.savefig(visual_path + "/tsne.png")
+    plt.savefig(paths.visual_path + f"tsne_{models.name}.png")
 
 
 if __name__ == "__main__":
     # model_checkpoint = 'models/trained_model.pth'
-    # pvisual_tsne(model_checkpoint)
+    # visual_tsne(model_checkpoint)
 
     visual_tsne()

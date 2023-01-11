@@ -1,0 +1,16 @@
+defaults:
+    - data: imagenet-mini
+    - experiment: exp1
+    - prediction: exp1
+    - visualization: exp1
+
+paths:
+  raw_data_path: "data/raw/"
+  processed_data_path: "data/processed/"
+  external_data_path: "data/raw/"
+  visual_path: "reports/figures/"
+  model_path: "models/"
+
+hydra:
+  job:
+    chdir: False

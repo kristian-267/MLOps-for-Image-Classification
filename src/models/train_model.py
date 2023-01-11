@@ -3,25 +3,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch import optim
+import hydra
+import logging
 
 from model import ResNeStModel
 
-path = "data/processed"
-visual_path = "reports/figures"
-model_checkpoint = "models/trained_model.pth"
-
-batch_size = 256
-epoch = 300
-eval_every = 100
-stop_after = 4
-
-decay = 1e-4
-momentum = 0.9
-lr = 0.01
-lr_epoch = [90, 165, 225, 270]
-lr_decay = 0.5
-
-criterion = nn.NLLLoss()
 
 '''
 if torch.backends.mps.is_available():
@@ -37,24 +23,31 @@ if torch.cuda.is_available():
 else:
     device = torch.device("cpu")
 
-def train():
-    train_dataset = torch.load(path + "/train_dataset.pt")
-    val_dataset = torch.load(path + "/val_dataset.pt")
+@hydra.main(config_path="../../conf", config_name='config.yaml')
+def train(config):
+    hparams = config.experiment
+    paths = config.paths
+
+    logger = logging.getLogger(__name__)
+
+    train_dataset = torch.load(paths.processed_data_path + "train_dataset.pt")
+    val_dataset = torch.load(paths.processed_data_path + "val_dataset.pt")
 
     train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=batch_size, shuffle=True
+        train_dataset, batch_size=hparams.batch_size, shuffle=True
     )
 
     val_loader = torch.utils.data.DataLoader(
-        val_dataset, batch_size=batch_size, shuffle=True
+        val_dataset, batch_size=hparams.batch_size, shuffle=True
     )
 
     model = ResNeStModel()
     model.to(device)
     model.apply(init_weights)
 
-    optimizer = optim.SGD(model.parameters(), lr=lr, weight_decay=decay, momentum=momentum)
-    scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=lr_epoch, gamma=lr_decay)
+    criterion = getattr(torch.nn, hparams.criterion)()
+    optimizer = getattr(optim, hparams.optimizer)(model.parameters(), lr=hparams.lr, weight_decay=hparams.decay, momentum=hparams.momentum)
+    scheduler = getattr(optim.lr_scheduler, hparams.scheduler)(optimizer, milestones=hparams.lr_epoch, gamma=hparams.lr_decay)
 
     train_losses, eval_losses, accuracies, steps = [], [], [], []
     train_loss = 0
@@ -62,7 +55,7 @@ def train():
     count = 0
 
     model.train()
-    for e in range(epoch):
+    for e in range(hparams.epoch):
         for images, labels in train_loader:
             images = images.to(device)
             labels = labels.to(device)
@@ -76,16 +69,16 @@ def train():
             train_loss += loss.item()
             train_losses.append(train_loss / (step + 1))
 
-            if step % eval_every == 0:
+            if step % hparams.eval_every == 0:
                 steps.append(step)
 
-                eval_loss, accuracy = evaluate(model, val_loader)
+                eval_loss, accuracy = evaluate(model, val_loader, criterion)
 
                 eval_losses.append(eval_loss)
                 accuracies.append(accuracy)
 
-                print(
-                    f"Epoch: {e}/{epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
+                logger.info(
+                    f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
                 )
 
                 if len(eval_losses) > 1 and eval_losses[-1] <= eval_losses[-2]:
@@ -93,10 +86,10 @@ def train():
                 else:
                     count = 0
 
-                if count >= stop_after:
-                    print("It's time for early stopping. Let's save the model!")
+                if count >= hparams.stop_after:
+                    logger.info("It's time for early stopping. Let's save the model!")
                     step += 1
-                    torch.save(model.state_dict(), model_checkpoint)
+                    torch.save(model.state_dict(), paths.model_path + f'checkpoint_{hparams.name}.pth')
                     break
             
             step += 1
@@ -107,10 +100,13 @@ def train():
 
         break
     else:
-        print("Finish training and save the model.")
-        torch.save(model.state_dict(), model_checkpoint,)
+        logger.info(
+            f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
+            )
+        logger.info("Finish training and save the model.")
+        torch.save(model.state_dict(), paths.model_path + f'checkpoint_{hparams.name}.pth')
 
-    plot_results(train_losses, eval_losses, accuracies, steps, step)
+    plot_results(train_losses, eval_losses, accuracies, steps, step, config)
 
 
 def init_weights(m):
@@ -131,15 +127,15 @@ def init_weights(m):
                 nn.init.orthogonal_(param)
 
 
-def evaluate(model, val_loader):
+def evaluate(model, val_loader, criterion):
     model.eval()
-    eval_loss, accuracy = eval_steps(model, val_loader)
+    eval_loss, accuracy = eval_steps(model, val_loader, criterion)
     model.train()
 
     return eval_loss, accuracy
 
 
-def eval_steps(model, dataloader):
+def eval_steps(model, dataloader, criterion):
     with torch.no_grad():
         eval_loss = 0
         accuracy = 0
@@ -158,7 +154,7 @@ def eval_steps(model, dataloader):
     return eval_loss, accuracy
 
 
-def plot_results(train_losses, eval_losses, accuracies, steps, step):
+def plot_results(train_losses, eval_losses, accuracies, steps, step, config):
     train_losses = np.array(train_losses)
     eval_losses = np.array(eval_losses)
     accuracies = np.array(accuracies)
@@ -176,7 +172,7 @@ def plot_results(train_losses, eval_losses, accuracies, steps, step):
     ax2.set_ylabel("accuracy (%)")
     ax2.legend()
 
-    plt.savefig(visual_path + "/loss.png")
+    plt.savefig(config.paths.visual_path + f"loss_{config.experient.name}.png")
 
 
 def calc_accuracy(output, labels):
