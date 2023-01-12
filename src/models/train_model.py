@@ -8,8 +8,10 @@ import torch.nn as nn
 from model import ResNeStModel
 from torch import optim
 from torch.profiler import ProfilerActivity, profile
+import wandb
+import glob
 
-"""
+
 if torch.backends.mps.is_available():
     device = torch.device("mps")
 elif torch.cuda.is_available():
@@ -22,12 +24,15 @@ if torch.cuda.is_available():
     device = torch.device("cuda")
 else:
     device = torch.device("cpu")
+"""
 
 
 @hydra.main(config_path="../../conf", config_name="config.yaml")
 def train(config):
     hparams = config.experiment
     paths = config.paths
+
+    wandb.config = hparams
 
     logger = logging.getLogger(__name__)
 
@@ -45,6 +50,8 @@ def train(config):
     model = ResNeStModel()
     model.to(device)
     model.apply(init_weights)
+
+    wandb.watch(model, log_freq=100)
 
     criterion = getattr(torch.nn, hparams.criterion)()
     optimizer = getattr(optim, hparams.optimizer)(
@@ -94,6 +101,7 @@ def train(config):
                     eval_losses.append(eval_loss)
                     accuracies.append(accuracy)
 
+                    wandb.log({"train loss": train_losses[-1], "eval loss": eval_losses[-1], "accuracy": accuracies[-1]})
                     logger.info(
                         f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
                     )
@@ -123,6 +131,7 @@ def train(config):
 
             break
         else:
+            wandb.log({"train loss": train_losses[-1], "eval loss": eval_losses[-1], "accuracy": accuracies[-1]})
             logger.info(
                 f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
             )
@@ -136,7 +145,11 @@ def train(config):
             sort_by="cpu_time_total", row_limit=30
         )
     )
+
     prof.export_chrome_trace(paths.profiles + f"{hparams.name}/trace.json")
+    profile_art = wandb.Artifact("trace", type="profile")
+    profile_art.add_file(glob.glob(paths.profiles + f"{hparams.name}/.pt.trace.json"))
+    profile_art.save()
 
     plot_results(train_losses, eval_losses, accuracies, steps, step, config)
 
@@ -217,4 +230,7 @@ def calc_accuracy(output, labels):
 
 
 if __name__ == "__main__":
+
+    wandb.init(project="mlops-project", entity="02476-mlops-group7")
     train()
+    wandb.finish()
