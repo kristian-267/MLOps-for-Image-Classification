@@ -153,3 +153,6 @@ dmypy.json
 
 /models
 /data
+/profiles
+/wandb
+/outputs

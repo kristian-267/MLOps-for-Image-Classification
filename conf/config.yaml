@@ -15,3 +15,7 @@ paths:
 hydra:
   job:
     chdir: False
+
+wandb:
+  entity: "02476-mlops-group7"
+  project: "mlops-project"

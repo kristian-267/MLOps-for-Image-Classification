@@ -10,6 +10,9 @@ from torch import optim
 from torch.profiler import ProfilerActivity, profile
 import wandb
 import glob
+import yaml
+from yaml.loader import SafeLoader
+from omegaconf import OmegaConf
 
 
 if torch.backends.mps.is_available():
@@ -32,7 +35,8 @@ def train(config):
     hparams = config.experiment
     paths = config.paths
 
-    wandb.config = hparams
+    wandb.init(project=config.wandb.project, entity=config.wandb.entity, settings=wandb.Settings(start_method="thread")).name = hparams.name
+    wandb.config.update(OmegaConf.to_container(hparams, resolve=True, throw_on_missing=True))
 
     logger = logging.getLogger(__name__)
 
@@ -40,11 +44,11 @@ def train(config):
     val_dataset = torch.load(paths.processed_data_path + "val_dataset.pt")
 
     train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=hparams.batch_size, shuffle=True
+        train_dataset, batch_size=wandb.config.batch_size, shuffle=True
     )
 
     val_loader = torch.utils.data.DataLoader(
-        val_dataset, batch_size=hparams.batch_size, shuffle=True
+        val_dataset, batch_size=wandb.config.batch_size, shuffle=True
     )
 
     model = ResNeStModel()
@@ -53,15 +57,15 @@ def train(config):
 
     wandb.watch(model, log_freq=100)
 
-    criterion = getattr(torch.nn, hparams.criterion)()
-    optimizer = getattr(optim, hparams.optimizer)(
+    criterion = getattr(torch.nn, wandb.config.criterion)()
+    optimizer = getattr(optim, wandb.config.optimizer)(
         model.parameters(),
-        lr=hparams.lr,
-        weight_decay=hparams.decay,
-        momentum=hparams.momentum,
+        lr=wandb.config.lr,
+        weight_decay=wandb.config.decay,
+        momentum=wandb.config.momentum,
     )
-    scheduler = getattr(optim.lr_scheduler, hparams.scheduler)(
-        optimizer, milestones=hparams.lr_epoch, gamma=hparams.lr_decay
+    scheduler = getattr(optim.lr_scheduler, wandb.config.scheduler)(
+        optimizer, milestones=wandb.config.lr_epoch, gamma=wandb.config.lr_decay
     )
 
     train_losses, eval_losses, accuracies, steps = [], [], [], []
@@ -72,14 +76,14 @@ def train(config):
     model.train()
     with profile(
         activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
-        schedule=torch.profiler.schedule(skip_first=90, wait=70, warmup=10, active=20),
+        schedule=torch.profiler.schedule(skip_first=0, wait=0, warmup=0, active=20),
         record_shapes=True,
         profile_memory=True,
         on_trace_ready=torch.profiler.tensorboard_trace_handler(
-            paths.profiles + hparams.name
+            paths.profile_path + wandb.config.name
         ),
     ) as prof:
-        for e in range(hparams.epoch):
+        for e in range(wandb.config.epoch):
             for images, labels in train_loader:
                 images = images.to(device)
                 labels = labels.to(device)
@@ -91,9 +95,10 @@ def train(config):
                 optimizer.step()
 
                 train_loss += loss.item()
-                train_losses.append(train_loss / (step + 1))
+                train_loss = train_loss / (step + 1)
+                train_losses.append(train_loss)
 
-                if step % hparams.eval_every == 0:
+                if step % wandb.config.eval_every == 0:
                     steps.append(step)
 
                     eval_loss, accuracy = evaluate(model, val_loader, criterion)
@@ -101,9 +106,9 @@ def train(config):
                     eval_losses.append(eval_loss)
                     accuracies.append(accuracy)
 
-                    wandb.log({"train loss": train_losses[-1], "eval loss": eval_losses[-1], "accuracy": accuracies[-1]})
+                    wandb.log({"train loss": train_loss, "eval loss": eval_loss, "accuracy": accuracy})
                     logger.info(
-                        f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
+                        f"Epoch: {e}/{wandb.config.epoch}\tStep: {step}\tTrain Loss: {train_loss:.2f}\tEval Loss: {eval_loss:.2f}\tAccuracy: {accuracy:.2f}%"
                     )
 
                     if len(eval_losses) > 1 and eval_losses[-1] <= eval_losses[-2]:
@@ -111,14 +116,14 @@ def train(config):
                     else:
                         count = 0
 
-                    if count >= hparams.stop_after:
+                    if count >= wandb.config.stop_after:
                         logger.info(
                             "It's time for early stopping. Let's save the model!"
                         )
                         step += 1
                         torch.save(
                             model.state_dict(),
-                            paths.model_path + f"checkpoint_{hparams.name}.pth",
+                            paths.model_path + f"checkpoint_{wandb.config.name}.pth",
                         )
                         break
 
@@ -131,13 +136,9 @@ def train(config):
 
             break
         else:
-            wandb.log({"train loss": train_losses[-1], "eval loss": eval_losses[-1], "accuracy": accuracies[-1]})
-            logger.info(
-                f"Epoch: {e}/{hparams.epoch}\tStep: {step}\tTrain Loss: {train_losses[-1]:.2f}\tEval Loss: {eval_losses[-1]:.2f}\tAccuracy: {accuracies[-1]:.2f}%"
-            )
             logger.info("Finish training and save the model.")
             torch.save(
-                model.state_dict(), paths.model_path + f"checkpoint_{hparams.name}.pth"
+                model.state_dict(), paths.model_path + f"checkpoint_{wandb.config.name}.pth"
             )
 
     logger.info(
@@ -146,9 +147,9 @@ def train(config):
         )
     )
 
-    prof.export_chrome_trace(paths.profiles + f"{hparams.name}/trace.json")
+    prof.export_chrome_trace(paths.profile_path + f"{wandb.config.name}/trace.json")
     profile_art = wandb.Artifact("trace", type="profile")
-    profile_art.add_file(glob.glob(paths.profiles + f"{hparams.name}/.pt.trace.json"))
+    profile_art.add_file(glob.glob(paths.profile_path + f"{wandb.config.name}/*.pt.trace.json")[0])
     profile_art.save()
 
     plot_results(train_losses, eval_losses, accuracies, steps, step, config)
@@ -217,7 +218,7 @@ def plot_results(train_losses, eval_losses, accuracies, steps, step, config):
     ax2.set_ylabel("accuracy (%)")
     ax2.legend()
 
-    plt.savefig(config.paths.visual_path + f"loss_{config.experient.name}.png")
+    plt.savefig(config.paths.visual_path + f"loss_{config.experiment.name}.png")
 
 
 def calc_accuracy(output, labels):
@@ -230,7 +231,8 @@ def calc_accuracy(output, labels):
 
 
 if __name__ == "__main__":
+    with open('conf/sweep.yaml') as f:
+        sweep_configuration = yaml.load(f, Loader=SafeLoader)
 
-    wandb.init(project="mlops-project", entity="02476-mlops-group7")
-    train()
-    wandb.finish()
+    sweep_id = wandb.sweep(sweep_configuration, entity="02476-mlops-group7", project='mlops-project')
+    wandb.agent(sweep_id, function=train)
