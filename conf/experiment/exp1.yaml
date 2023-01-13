@@ -1,13 +1,27 @@
 # @package _group_
-name: "exp1"
+name: exp1
+model: resnest50d
+device: auto
+accelerator: auto
+auto_lr_find: True
+auto_scale_batch_size: binsearch
 batch_size: 8
-epoch: 1
-eval_every: 100
-stop_after: 4
+max_epochs: 1
+max_steps: 1
+val_check_interval: 8
+num_sanity: 0
+precision: bf16
 momentum: 0.9
 lr: 0.01
-lr_epoch: [90, 165, 225, 270]
+lr_monitor: val_loss
+lr_mode: min
+lr_patience: 3
 lr_decay: 0.5
+lr_threshold: 0.001
+monitor: val_accuracy
+monitor_mode: max
+es_patience: 3
+log_freq: 1
 criterion: NLLLoss
 optimizer: SGD
-scheduler: MultiStepLR
+scheduler: ReduceLROnPlateau

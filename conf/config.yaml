@@ -10,6 +10,7 @@ paths:
   external_data_path: "data/raw/"
   visual_path: "reports/figures/"
   model_path: "models/"
+  log_path: "log/"
   profile_path: "profiles/"
 
 hydra:
@@ -19,3 +20,8 @@ hydra:
 wandb:
   entity: "02476-mlops-group7"
   project: "mlops-project"
+  log_model: True
+  log_freq: 100
+
+profiler:
+  filename: "profiler_logs"
