@@ -5,10 +5,10 @@ device: auto
 accelerator: auto
 auto_lr_find: True
 auto_scale_batch_size: binsearch
-batch_size: 256
-max_epochs: 300
-max_steps: -1
-val_check_interval: 0.5
+batch_size: 2
+max_epochs: 1
+max_steps: 1
+val_check_interval: 4
 num_sanity: 0
 precision: bf16
 momentum: 0.9
@@ -21,7 +21,7 @@ lr_threshold: 0.001
 monitor: val_accuracy
 monitor_mode: max
 es_patience: 3
-log_freq: 100
+log_freq: 1
 criterion: NLLLoss
 optimizer: SGD
 scheduler: ReduceLROnPlateau
