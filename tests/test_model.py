@@ -16,4 +16,4 @@ def test_model():
     model = ResNeSt(config.experiment)
     output = model.forward(data)
 
-    assert list(output.shape) == [config.experiment.batch_size, N_IMAGENET_MINI_CLASS + 1]
+    assert list(output.shape) == [config.experiment.batch_size, N_IMAGENET_MINI_CLASS]
