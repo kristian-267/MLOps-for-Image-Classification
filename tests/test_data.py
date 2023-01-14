@@ -31,7 +31,3 @@ def test_data():
     
     assert len(train_labels.keys()) == N_IMAGENET_MINI_CLASS
     assert len(val_labels.keys()) == N_IMAGENET_MINI_CLASS
-
-
-if __name__ == "__main__":
-    test_data()

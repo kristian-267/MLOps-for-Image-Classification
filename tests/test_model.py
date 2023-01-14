@@ -17,6 +17,3 @@ def test_model():
     output = model.forward(data)
 
     assert list(output.shape) == [config.experiment.batch_size, N_IMAGENET_MINI_CLASS]
-
-if __name__ == "__main__":
-    test_model()
