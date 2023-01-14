@@ -1,4 +1,4 @@
-# @package _group_
+# @package experiment
 name: exp1
 
 model: resnest50d

@@ -1,10 +1,12 @@
-import hydra
+from hydra import initialize, compose
 from tests import N_IMAGENET_MINI_TRAIN, N_IMAGENET_MINI_VAL, IMAGENET_MINI_SHAPE, N_IMAGENET_MINI_CLASS
 from src.data.make_dataset import DataModule
 
 
-@hydra.main(config_path="../conf", config_name="config.yaml")
-def test_data(config):
+def test_data():
+    with initialize(version_base=None, config_path="../conf"):
+        config = compose(config_name="config.yaml")
+    
     datamodule = DataModule(config)
     datamodule.prepare_data()
     trainset, valset = datamodule.setup('fit')
