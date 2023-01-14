@@ -43,3 +43,4 @@ jobs:
     - name: Check pep8
       run: |
         flake8 src/
+        flake8 tests/
