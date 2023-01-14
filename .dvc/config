@@ -3,3 +3,5 @@
     autostage = true
 ['remote "storage"']
     url = gdrive://1pyEsa84j-HB1GHkPyEb-GBgSEuqqKybU
+    gdrive_acknowledge_abuse = true
+    gdrive_service_account_user_email = kristianr2607@gmail.com
