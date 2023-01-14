@@ -1,6 +1,8 @@
 # @package _group_
 name: exp1
+
 model: resnest50d
+
 device: auto
 accelerator: auto
 auto_lr_find: True
@@ -9,8 +11,10 @@ batch_size: 2
 max_epochs: 1
 max_steps: 1
 val_check_interval: 4
+limit_val_batches: 0.01
 num_sanity: 0
 precision: bf16
+
 momentum: 0.9
 lr: 0.1
 lr_monitor: val_loss
@@ -18,10 +22,13 @@ lr_mode: min
 lr_patience: 3
 lr_decay: 0.5
 lr_threshold: 0.001
+
 monitor: val_accuracy
 monitor_mode: max
 es_patience: 3
+
 log_freq: 1
+
 criterion: NLLLoss
 optimizer: SGD
 scheduler: ReduceLROnPlateau

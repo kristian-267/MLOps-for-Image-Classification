@@ -39,12 +39,18 @@ class DataModule(pl.LightningDataModule):
             self.train = torch.load(self.output_dir + "train_dataset.pt")
             self.val = torch.load(self.output_dir + "val_dataset.pt")
 
+            return self.train, self.val
+
         # Assign test dataset for use in dataloader(s)
         if stage == "test":
             self.test = torch.load(self.output_dir + "val_dataset.pt")
 
+            return self.test
+
         if stage == "predict":
             self.predict = torch.load(self.output_dir + "val_dataset.pt")
+
+            return self.predict
 
     def train_dataloader(self):
         return DataLoader(self.train, batch_size=self.batch_size, shuffle=True)

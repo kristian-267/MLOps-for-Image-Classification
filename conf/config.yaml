@@ -1,8 +1,6 @@
 defaults:
     - data: imagenet-mini
     - experiment: exp1
-    - prediction: exp1
-    - visualization: exp1
 
 paths:
   raw_data_path: "data/raw/"
@@ -22,6 +20,3 @@ wandb:
   project: "mlops-project"
   log_model: True
   log_freq: 100
-
-profiler:
-  filename: "profiler_logs"

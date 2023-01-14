@@ -1,12 +1,11 @@
 program: src/models/train_model.py
-method: bayes
+method: grid
 metric:
   goal: maximize
   name: accuracy
 parameters:
   decay:
-    min: 0.0001
-    max: 0.001
+    values: [0.0001, 0.001]
 command:
   - ${env}
   - python

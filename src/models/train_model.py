@@ -2,7 +2,7 @@ import hydra
 from model import ResNeSt
 from src.data.make_dataset import DataModule
 import torch
-from torch.profiler import ProfilerActivity, profile
+from torch.profiler import ProfilerActivity
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.profilers import PyTorchProfiler
@@ -37,12 +37,14 @@ def train(config):
     profiler = PyTorchProfiler(
         dirpath=paths.profile_path + hparams.name,
         activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
-        **{'schedule': torch.profiler.schedule(skip_first=0, wait=0, warmup=0, active=20),
-        #'schedule': torch.profiler.schedule(skip_first=50, wait=50, warmup=20, active=30),
-        'record_shapes': True,
-        'profile_memory': True,
-        'on_trace_ready': torch.profiler.tensorboard_trace_handler(paths.profile_path + hparams.name),}
-        )
+        **{
+            'schedule': torch.profiler.schedule(skip_first=0, wait=0, warmup=0, active=20),
+            #'schedule': torch.profiler.schedule(skip_first=50, wait=50, warmup=20, active=30),
+            'record_shapes': True,
+            'profile_memory': True,
+            'on_trace_ready': torch.profiler.tensorboard_trace_handler(paths.profile_path + hparams.name)
+        }
+    )
 
     trainer = pl.Trainer(
         default_root_dir=paths.log_path + hparams.name,
@@ -58,9 +60,9 @@ def train(config):
         num_sanity_val_steps=hparams.num_sanity,
         precision=hparams.precision,
         val_check_interval=hparams.val_check_interval,
-        limit_val_batches=0.01,
+        limit_val_batches=hparams.limit_val_batches,
         callbacks=[checkpoint_callback, early_stopping_callback],
-        )
+    )
     trainer.tune(model, datamodule=datamodule, scale_batch_size_kwargs={'steps_per_trial': 1, 'max_trials': 1}, lr_find_kwargs={'num_training': 1})
     #trainer.tune(model, datamodule=datamodule)
     trainer.fit(model=model, datamodule=datamodule)
