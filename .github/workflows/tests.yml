@@ -3,21 +3,24 @@ name: "Run tests"
 on:
   push:
     branches: [ master, main ]
-  pull_request:
-    branches: [ master, main ]
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-    - name: Set up Python 3.10.8
-      uses: actions/setup-python@v2
+      uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.10.8
+        python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -26,4 +29,5 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        pytest -v
+        pip install pytest-cov
+        pytest tests/test_model.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html

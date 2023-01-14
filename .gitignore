@@ -153,6 +153,10 @@ dmypy.json
 
 /models
 /data
+/data/external
+/data/interim
+/data/processed
+/data/raw/imagenet-mini/val
 /profiles
 /wandb
 /outputs
