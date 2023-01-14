@@ -26,7 +26,8 @@ jobs:
     - name: Get data
       run: dvc pull
       env:
-        GDRIVE_CREDENTIALS_DATA: $
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
