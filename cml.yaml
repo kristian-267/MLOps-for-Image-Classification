@@ -28,8 +28,7 @@ name: train-my-model
             GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
           run: |
             pip install -r requirements.txt  # install dependencies
-            dvc pull --run-cache
-            dvc repro
+            dvc pull
             python ./src/models/train_model.py  # run training
         - name: Write report
           env:
