@@ -1,5 +1,5 @@
-import torch  # type: ignore
-from hydra import compose, initialize  # type: ignore
+import torch
+from hydra import compose, initialize
 
 from src.models.model import ResNeSt
 from tests import IMAGENET_MINI_SHAPE, N_IMAGENET_MINI_CLASS

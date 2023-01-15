@@ -1,4 +1,4 @@
-from hydra import compose, initialize  # type: ignore
+from hydra import compose, initialize
 
 from src.data.make_dataset import DataModule
 from tests import (

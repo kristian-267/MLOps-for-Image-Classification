@@ -2,11 +2,11 @@
 import os
 from pathlib import Path
 
-import omegaconf  # type: ignore
-import pytorch_lightning as pl  # type: ignore
-import torch  # type: ignore
+import omegaconf
+import pytorch_lightning as pl
+import torch
 from torch.utils.data import DataLoader
-from torchvision import datasets, transforms  # type: ignore
+from torchvision import datasets, transforms
 
 CROPSIZE = 224
 RESIZE = 256

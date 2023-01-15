@@ -1,9 +1,9 @@
 from pathlib import Path
 
-import hydra  # type: ignore
-import omegaconf  # type: ignore
-import pytorch_lightning as pl  # type: ignore
-import torch  # type: ignore
+import hydra
+import omegaconf
+import pytorch_lightning as pl
+import torch
 import yaml
 from omegaconf import OmegaConf
 from pytorch_lightning.loggers import WandbLogger
@@ -11,7 +11,7 @@ from pytorch_lightning.profilers import PyTorchProfiler
 from torch.profiler import ProfilerActivity
 from yaml.loader import SafeLoader
 
-import wandb  # type: ignore
+import wandb
 from src.data.make_dataset import DataModule
 from src.models.model import ResNeSt
 
@@ -68,7 +68,7 @@ def train(config: omegaconf.DictConfig) -> None:
         activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
         **{
             "schedule": torch.profiler.schedule(
-                skip_first=0, wait=0, warmup=0, active=20
+                skip_first=0, wait=0, warmup=0, active=1
             ),
             # 'schedule': torch.profiler.schedule(
             # skip_first=50,
