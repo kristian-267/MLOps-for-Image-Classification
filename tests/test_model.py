@@ -1,10 +1,11 @@
-from hydra import initialize, compose
 import torch
-from tests import IMAGENET_MINI_SHAPE, N_IMAGENET_MINI_CLASS
+from hydra import compose, initialize
+
 from src.models.model import ResNeSt
+from tests import IMAGENET_MINI_SHAPE, N_IMAGENET_MINI_CLASS
 
 
-def test_model():
+def test_model() -> None:
     with initialize(version_base=None, config_path="../conf"):
         config = compose(config_name="config.yaml")
 
@@ -16,4 +17,11 @@ def test_model():
     model = ResNeSt(config.experiment)
     output = model.forward(data)
 
-    assert list(output.shape) == [config.experiment.batch_size, N_IMAGENET_MINI_CLASS]
+    assert list(output.shape) == [
+        config.experiment.batch_size,
+        N_IMAGENET_MINI_CLASS,
+    ]
+
+
+if __name__ == "__main__":
+    test_model()

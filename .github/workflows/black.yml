@@ -42,5 +42,5 @@ jobs:
         pip install black
     - name: Sort python files
       run: |
-        black src/
-        black tests/
+        black --line-length 80 src/
+        black --line-length 80 tests/

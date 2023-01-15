@@ -43,6 +43,5 @@ jobs:
         python -m pip install types-PyYAML
     - name: Check static type
       run: |
-        mypy --install-types
         mypy src/
         mypy tests/

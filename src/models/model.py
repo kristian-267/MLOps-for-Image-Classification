@@ -1,12 +1,15 @@
-import timm
+from typing import Any, Dict, List, Tuple, Union
+
+import omegaconf
+import timm  # type: ignore
 import torch
 import torch.nn as nn
-from torch import optim
 from pytorch_lightning import LightningModule
+from torch import optim
 
 
 class ResNeSt(LightningModule):
-    def __init__(self, hparams):
+    def __init__(self, hparams: omegaconf.DictConfig) -> None:
         super().__init__()
         self.params = hparams
         self.lr = self.params.lr
@@ -14,10 +17,12 @@ class ResNeSt(LightningModule):
         self.model.apply(init_weights)
         self.criterion = getattr(torch.nn, self.params.criterion)()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.model(x)
 
-    def training_step(self, batch, batch_idx):
+    def training_step(
+        self, batch: List[torch.Tensor], batch_idx: int
+    ) -> torch.Tensor:
         x, y = batch
         y_pred = self(x)
         y_pred = nn.LogSoftmax(dim=1)(y_pred)
@@ -26,21 +31,27 @@ class ResNeSt(LightningModule):
 
         return loss
 
-    def validation_step(self, batch, batch_idx):
+    def validation_step(
+        self, batch: List[torch.Tensor], batch_idx: int
+    ) -> Union[torch.Tensor, Dict[str, Any], None]:
         loss, accuracy = self._shared_eval_step(batch)
         self.log("val_loss", loss, prog_bar=True, sync_dist=True)
         self.log("val_accuracy", accuracy, prog_bar=True, sync_dist=True)
 
-        return loss, accuracy
+        return {"val_loss": loss, "val_accuracy": accuracy}
 
-    def test_step(self, batch, batch_idx):
+    def test_step(
+        self, batch: List[torch.Tensor], batch_idx: int
+    ) -> Union[torch.Tensor, Dict[str, Any], None]:
         loss, accuracy = self._shared_eval_step(batch)
         self.log("test_loss", loss, sync_dist=True)
         self.log("test_accuracy", loss, sync_dist=True)
 
-        return loss, accuracy
+        return {"test_loss": loss, "test_accuracy": accuracy}
 
-    def _shared_eval_step(self, batch):
+    def _shared_eval_step(
+        self, batch: List[torch.Tensor]
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
         x, y = batch
         y_pred = self(x)
         y_pred = nn.LogSoftmax(dim=1)(y_pred)
@@ -53,7 +64,7 @@ class ResNeSt(LightningModule):
 
         return loss, accuracy
 
-    def configure_optimizers(self):
+    def configure_optimizers(self) -> dict:
         optimizer = getattr(optim, self.params.optimizer)(
             self.model.parameters(),
             lr=self.params.lr,
@@ -63,15 +74,19 @@ class ResNeSt(LightningModule):
         optimizer_config = {
             "optimizer": optimizer,
             "lr_scheduler": getattr(optim.lr_scheduler, self.params.scheduler)(
-                optimizer, mode=self.params.lr_mode, factor=self.params.lr_decay, patience=self.params.lr_patience, threshold=self.params.lr_threshold
-                ),
-            "monitor": self.params.lr_monitor
+                optimizer,
+                mode=self.params.lr_mode,
+                factor=self.params.lr_decay,
+                patience=self.params.lr_patience,
+                threshold=self.params.lr_threshold,
+            ),
+            "monitor": self.params.lr_monitor,
         }
 
         return optimizer_config
 
 
-def init_weights(m):
+def init_weights(m: nn.Module) -> None:
     if isinstance(m, nn.Linear):
         nn.init.kaiming_normal_(m.weight)
         nn.init.constant_(m.bias, 0.0)
