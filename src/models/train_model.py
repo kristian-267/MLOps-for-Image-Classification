@@ -1,9 +1,9 @@
 from pathlib import Path
 
-import hydra
-import omegaconf
-import pytorch_lightning as pl
-import torch
+import hydra  # type: ignore
+import omegaconf  # type: ignore
+import pytorch_lightning as pl  # type: ignore
+import torch  # type: ignore
 import yaml
 from omegaconf import OmegaConf
 from pytorch_lightning.loggers import WandbLogger
@@ -11,7 +11,7 @@ from pytorch_lightning.profilers import PyTorchProfiler
 from torch.profiler import ProfilerActivity
 from yaml.loader import SafeLoader
 
-import wandb
+import wandb  # type: ignore
 from src.data.make_dataset import DataModule
 from src.models.model import ResNeSt
 

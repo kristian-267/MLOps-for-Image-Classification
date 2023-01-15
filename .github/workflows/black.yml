@@ -15,8 +15,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.9", "3.10"]
+        os: [macos-latest]
+        python-version: ["3.10"]
 
     steps:
     - name: Checkout
@@ -42,5 +42,5 @@ jobs:
         pip install black
     - name: Sort python files
       run: |
-        black --line-length 80 src/
-        black --line-length 80 tests/
+        black --line-length 79 src/
+        black --line-length 79 tests/

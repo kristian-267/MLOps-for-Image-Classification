@@ -1,10 +1,10 @@
 from typing import Any, Dict, List, Tuple, Union
 
-import omegaconf
+import omegaconf  # type: ignore
 import timm  # type: ignore
-import torch
+import torch  # type: ignore
 import torch.nn as nn
-from pytorch_lightning import LightningModule
+from pytorch_lightning import LightningModule  # type: ignore
 from torch import optim
 
 

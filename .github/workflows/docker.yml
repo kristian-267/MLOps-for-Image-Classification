@@ -1,0 +1,18 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@ve
+    - name: Build the Docker image
+      run: |
+        echo "$" | docker login \
+          -u "$" --password-stdin docker.io
+        docker build . --file Dockerfile \
+          --tag docker.io/$/$:$GITHUB_SHA
+        docker push docker.io/$/$:$GITHUB_SHA
