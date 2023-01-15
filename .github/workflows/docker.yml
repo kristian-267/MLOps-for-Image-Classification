@@ -25,4 +25,4 @@ jobs:
         run: |
           docker build . --file ./trainer.dockerfile \
             --tag docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:latest
+          docker push docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:latest
