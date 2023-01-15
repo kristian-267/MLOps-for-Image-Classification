@@ -1,40 +1,40 @@
 name: train-my-model
-  on: [push]
-  jobs:
-    run:
-      runs-on: ${{ matrix.os }}
-      strategy:
-        matrix:
-          os: [macos-latest]
-          python-version: ["3.10"]
-      steps:
-        - uses: actions/checkout@v3
-        - uses: iterative/setup-dvc@v1
-        - uses: iterative/setup-cml@v1
-        - name: Set up Python ${{ matrix.python-version }}
-          uses: actions/setup-python@v4
-          with:
-            python-version: ${{ matrix.python-version }}
-        - name: Cache data
-          uses: actions/cache@v3
-          with:
-            path: ./data
-            key: ${{ matrix.os }}-py${{ matrix.python-version }}-dvc
-            restore-keys: |
-              ${{ matrix.os }}-py${{ matrix.python-version }}-dvc
-        - name: Train model
-          env:
-            repo_token: ${{ secrets.GITHUB_TOKEN }}
-            GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
-          run: |
-            pip install -r requirements.txt  # install dependencies
-            dvc pull
-            python ./src/models/train_model.py  # run training
-        - name: Write report
-          env:
-            # this authenticates that the right permissions are in place
-            REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            cat classification_report.txt >> report.md
-            cml-publish confusion_matrix.png --md >> report.md
-            cml-send-comment report.md
+on: [push]
+jobs:
+  run:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+        python-version: ["3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: iterative/setup-dvc@v1
+      - uses: iterative/setup-cml@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Cache data
+        uses: actions/cache@v3
+        with:
+          path: ./data
+          key: ${{ matrix.os }}-py${{ matrix.python-version }}-dvc
+          restore-keys: |
+            ${{ matrix.os }}-py${{ matrix.python-version }}-dvc
+      - name: Train model
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+        run: |
+          pip install -r requirements.txt  # install dependencies
+          dvc pull
+          python ./src/models/train_model.py  # run training
+      - name: Write report
+        env:
+          # this authenticates that the right permissions are in place
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cat classification_report.txt >> report.md
+          cml-publish confusion_matrix.png --md >> report.md
+          cml-send-comment report.md
