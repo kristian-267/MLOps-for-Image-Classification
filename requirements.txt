@@ -4,7 +4,6 @@
 # external requirements
 black
 click==8.1.3
-dvc
 flake8
 hydra-core==1.3.1
 isort
