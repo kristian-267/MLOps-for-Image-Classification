@@ -20,6 +20,12 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+      - 
+        name: Build the Docker image
+        run: |
+          docker build . --file Dockerfile \
+            --tag docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}/train:$GITHUB_SHA
+          docker push docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}/train:$GITHUB_SHA
       -
         name: Build and push
         uses: docker/build-push-action@v3
@@ -27,4 +33,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:latest
+          tags: docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}/train:$GITHUB_SHA
