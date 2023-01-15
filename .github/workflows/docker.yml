@@ -24,5 +24,5 @@ jobs:
         name: Build the Docker image
         run: |
           docker build . --file ./trainer.dockerfile \
-            --tag docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}/train:$GITHUB_SHA
-          docker push docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}/train:$GITHUB_SHA
+            --tag docker.io/train:$GITHUB_SHA
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:docker.io/train:$GITHUB_SHA
