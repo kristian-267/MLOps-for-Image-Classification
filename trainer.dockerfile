@@ -10,7 +10,7 @@ COPY requirements.txt requirements.txt
 COPY requirements_tests.txt requirements_tests.txt
 COPY setup.py setup.py
 COPY data.dvc data.dvc
-COPY model.dvc model.dvc
+COPY models.dvc models.dvc
 COPY src/ src/
 COPY tests/ tests/
 COPY .dvc/ .dvc/
