@@ -23,7 +23,7 @@ jobs:
       - 
         name: Build the Docker image
         run: |
-          docker build . --file Dockerfile \
+          docker build . --file ./Dockerfile \
             --tag docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}/train:$GITHUB_SHA
           docker push docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}/train:$GITHUB_SHA
       -
