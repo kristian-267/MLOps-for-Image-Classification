@@ -23,7 +23,7 @@ jobs:
       - 
         name: Build the Docker image
         run: |
-          docker build . --file ./Dockerfile \
+          docker build . --file ./trainer.dockerfile \
             --tag docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}/train:$GITHUB_SHA
           docker push docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}/train:$GITHUB_SHA
       -
@@ -31,6 +31,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./Dockerfile
+          file: ./trainer.dockerfile
           push: true
           tags: docker.io/${{ secrets.DOCKER_HUB_REPOSITORY }}/train:$GITHUB_SHA
