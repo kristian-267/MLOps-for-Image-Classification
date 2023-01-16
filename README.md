@@ -75,8 +75,6 @@ The model we expect to use is [ResNeSt](https://arxiv.org/pdf/2004.08955.pdf). I
 
 ## Project Checklist
 
-## Project checklist
-
 Please note that all the lists are *exhaustive* meaning that I do not expect you to have completed every
 point on the checklist for the exam.
 
