@@ -6,28 +6,29 @@ model: resnest50d
 device: auto
 accelerator: auto
 auto_lr_find: True
-auto_scale_batch_size: binsearch
-batch_size: 2
-max_epochs: 1
-max_steps: 1
-val_check_interval: 4
-limit_val_batches: 0.01
+auto_scale_batch_size: False
+batch_size: 432
+max_epochs: 50
+max_steps: -1
+val_check_interval: 0.25
+limit_val_batches: 1
 num_sanity: 0
 precision: bf16
 
 momentum: 0.9
-lr: 0.1
+lr: 0.04
 lr_monitor: val_loss
 lr_mode: min
-lr_patience: 3
+lr_patience: 5
 lr_decay: 0.5
-lr_threshold: 0.001
+lr_threshold: 0.0001
 
 monitor: val_accuracy
 monitor_mode: max
 es_patience: 3
 
-log_freq: 1
+log_freq: 20
+check_every_n_epoch: 1
 
 criterion: NLLLoss
 optimizer: SGD

@@ -22,12 +22,12 @@ class ResNeSt(LightningModule):
 
     def training_step(
         self, batch: List[torch.Tensor], batch_idx: int
-    ) -> torch.Tensor:
+    ) -> Union[torch.Tensor, Dict[str, Any], None]:
         x, y = batch
         y_pred = self(x)
         y_pred = nn.LogSoftmax(dim=1)(y_pred)
         loss = self.criterion(y_pred, y)
-        self.log("train_loss", loss)
+        self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, sync_dist=True, logger=True)
 
         return loss
 
@@ -35,8 +35,8 @@ class ResNeSt(LightningModule):
         self, batch: List[torch.Tensor], batch_idx: int
     ) -> Union[torch.Tensor, Dict[str, Any], None]:
         loss, accuracy = self._shared_eval_step(batch)
-        self.log("val_loss", loss, prog_bar=True, sync_dist=True)
-        self.log("val_accuracy", accuracy, prog_bar=True, sync_dist=True)
+        self.log("val_loss", loss, prog_bar=True, sync_dist=True, logger=True)
+        self.log("val_accuracy", accuracy, prog_bar=True, sync_dist=True, logger=True)
 
         return {"val_loss": loss, "val_accuracy": accuracy}
 
@@ -44,8 +44,8 @@ class ResNeSt(LightningModule):
         self, batch: List[torch.Tensor], batch_idx: int
     ) -> Union[torch.Tensor, Dict[str, Any], None]:
         loss, accuracy = self._shared_eval_step(batch)
-        self.log("test_loss", loss, sync_dist=True)
-        self.log("test_accuracy", loss, sync_dist=True)
+        self.log("test_loss", loss, prog_bar=True, sync_dist=True, logger=True)
+        self.log("test_accuracy", accuracy, prog_bar=True, sync_dist=True, logger=True)
 
         return {"test_loss": loss, "test_accuracy": accuracy}
 

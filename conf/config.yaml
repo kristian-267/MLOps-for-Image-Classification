@@ -19,4 +19,4 @@ wandb:
   entity: "02476-mlops-group7"
   project: "mlops-project"
   log_model: True
-  log_freq: 100
+  log_freq: 20

@@ -30,19 +30,19 @@ def train(config: omegaconf.DictConfig) -> None:
         parents=True, exist_ok=True
     )
 
-    wandb_logger = WandbLogger(
-        name=config.experiment.name,
-        save_dir=paths.log_path + config.experiment.name,
-        project=config.wandb.project,
-        log_model=config.wandb.log_model,
-    )
-    wandb_logger.experiment.config.update(
+    wandb.init()
+    wandb.run.name = config.experiment.name + f"_decay_{wandb.config.decay}"
+    wandb.config.update(
         OmegaConf.to_container(
             config.experiment, resolve=True, throw_on_missing=True
         )
     )
+    wandb_logger = WandbLogger(
+        save_dir=paths.log_path + config.experiment.name,
+        log_model=config.wandb.log_model,
+    )
 
-    hparams = wandb_logger.experiment.config
+    hparams = wandb.config
 
     datamodule = DataModule(config)
     model = ResNeSt(hparams)
@@ -53,8 +53,7 @@ def train(config: omegaconf.DictConfig) -> None:
         dirpath=paths.model_path + hparams.name,
         monitor=hparams.monitor,
         mode=hparams.monitor_mode,
-        save_on_train_epoch_end=True,
-        every_n_train_steps=1,
+        every_n_epochs=hparams.check_every_n_epoch,
     )
     early_stopping_callback = pl.callbacks.EarlyStopping(
         monitor=hparams.monitor,
@@ -63,19 +62,14 @@ def train(config: omegaconf.DictConfig) -> None:
         mode=hparams.monitor_mode,
     )
 
+    '''
     profiler = PyTorchProfiler(
         dirpath=paths.profile_path + hparams.name,
         activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
         **{
             "schedule": torch.profiler.schedule(
-                skip_first=0, wait=0, warmup=0, active=1
+                skip_first=0, wait=0, warmup=198, active=2, repeat=1
             ),
-            # 'schedule': torch.profiler.schedule(
-            # skip_first=50,
-            # wait=50,
-            # warmup=20,
-            # active=30
-            # ),
             "record_shapes": True,
             "profile_memory": True,
             "on_trace_ready": torch.profiler.tensorboard_trace_handler(
@@ -83,12 +77,13 @@ def train(config: omegaconf.DictConfig) -> None:
             ),
         }
     )
+    '''
 
     trainer = pl.Trainer(
         default_root_dir=paths.log_path + hparams.name,
         logger=wandb_logger,
         log_every_n_steps=hparams.log_freq,
-        profiler=profiler,
+        # profiler=profiler,
         devices=hparams.device,
         accelerator=hparams.accelerator,
         auto_lr_find=hparams.auto_lr_find,
@@ -101,13 +96,6 @@ def train(config: omegaconf.DictConfig) -> None:
         limit_val_batches=hparams.limit_val_batches,
         callbacks=[checkpoint_callback, early_stopping_callback],
     )
-    trainer.tune(
-        model,
-        datamodule=datamodule,
-        scale_batch_size_kwargs={"steps_per_trial": 1, "max_trials": 1},
-        lr_find_kwargs={"num_training": 1},
-    )
-    # trainer.tune(model, datamodule=datamodule)
     trainer.fit(model=model, datamodule=datamodule)
 
 
