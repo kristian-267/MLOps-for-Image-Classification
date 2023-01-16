@@ -23,12 +23,30 @@ We are going to use [ImageNet 1000 (mini)](https://www.kaggle.com/datasets/ifigo
 The model we expect to use is [ResNeSt](https://arxiv.org/pdf/2004.08955.pdf). It is a ResNet variant which stacking several Split-Attention blocks (conposed by featuremap group and split attention operations). It is easy to work with, computational efficient, and universally improves the learned feature representations to boost performance across image classification.
 
 ## Project Implementation
-Configure Environment
+Configure Environment:
 ```
 pip install -r requirement
 ```
 
+Download and make the dataset:
+```
+python src/data/make_dataset.py data/processed/
+```
 
+Train the model:
+```
+python src/models/train_model.py
+```
+
+Test the model:
+```
+python src/models/predict_model.py models/trained_model.pt
+```
+
+Run unittest with coverage
+```
+coverage run --source=src/ -m pytest tests/
+```
 ## Project Organization
 
     ├── LICENSE
