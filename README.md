@@ -22,6 +22,13 @@ We are going to use [ImageNet 1000 (mini)](https://www.kaggle.com/datasets/ifigo
 #### What deep learning models do you expect to use
 The model we expect to use is [ResNeSt](https://arxiv.org/pdf/2004.08955.pdf). It is a ResNet variant which stacking several Split-Attention blocks (conposed by featuremap group and split attention operations). It is easy to work with, computational efficient, and universally improves the learned feature representations to boost performance across image classification.
 
+## Project Implementation
+Configure Environment
+```
+pip install -r requirement
+```
+
+
 ## Project Organization
 
     ├── LICENSE
