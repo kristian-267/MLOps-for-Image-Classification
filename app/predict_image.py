@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File
+from http import HTTPStatus
 import cv2
 import torch
 import numpy as np
@@ -12,7 +13,7 @@ app = FastAPI()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def predict():
-    hydra.initialize(config_path="conf", job_name="prediction_app")
+    hydra.initialize(config_path="../conf", job_name="prediction_app")
     config = compose(config_name='predict.yaml')
 
     image_path = 'temp.jpg'
@@ -21,7 +22,7 @@ def predict():
     return top_class
 
 def predict_step(config, image_path):
-    model = ResNeSt.load_from_checkpoint("models/model.ckpt", map_location=device, hparams=config)
+    model = ResNeSt.load_from_checkpoint("../models/model.ckpt", map_location=device, hparams=config)
     model.eval()
 
     img = cv2.imread(image_path, cv2.IMREAD_COLOR)
@@ -43,7 +44,17 @@ def predict_step(config, image_path):
 
     return top_class.item()
 
-@app.post("/")
+@app.get("/")
+def root():
+    """ Health check."""
+    response = {
+        "Hello": "World",
+        "message": HTTPStatus.OK.phrase,
+        "status-code": HTTPStatus.OK,
+    }
+    return response
+
+@app.post("/p")
 async def predict_image(data: UploadFile = File(...)):
     with open('temp.jpg', 'wb') as image:
         content = await data.read()
