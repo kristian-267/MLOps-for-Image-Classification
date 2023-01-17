@@ -63,6 +63,6 @@ async def predict_image(data: UploadFile = File(...)):
     
     top_class = predict()
 
-    response = f"The Image Is Belongs To Class {top_class}."
+    response = f"The Image Belongs To Class {top_class}."
 
     return response
