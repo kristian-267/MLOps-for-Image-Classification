@@ -1,6 +1,6 @@
 defaults:
     - data: imagenet-mini
-    - experiment: exp_test
+    - experiment: exp_4
 
 paths:
   raw_data_path: "data/raw/"
