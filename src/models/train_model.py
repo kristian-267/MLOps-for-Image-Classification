@@ -99,7 +99,7 @@ def train(config: omegaconf.DictConfig) -> None:
     trainer.fit(model=model, datamodule=datamodule)
 
 
-if __name__ == "__main__":
+def main():
     with open("conf/sweep.yaml") as f:
         sweep_configuration = yaml.load(f, Loader=SafeLoader)
 
@@ -109,3 +109,7 @@ if __name__ == "__main__":
         project="mlops-project",
     )
     wandb.agent(sweep_id, function=train)
+
+
+if __name__ == "__main__":
+    main()

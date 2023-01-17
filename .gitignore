@@ -156,4 +156,4 @@ dmypy.json
 /profiles
 /wandb
 /outputs
-/log
+/logs

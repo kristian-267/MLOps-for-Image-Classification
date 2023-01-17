@@ -1,6 +1,6 @@
 defaults:
     - data: imagenet-mini
-    - experiment: exp2
+    - experiment: exp_test
 
 paths:
   raw_data_path: "data/raw/"
@@ -8,7 +8,7 @@ paths:
   external_data_path: "data/raw/"
   visual_path: "reports/figures/"
   model_path: "models/"
-  log_path: "log/"
+  log_path: "logs/"
   profile_path: "profiles/"
 
 hydra:

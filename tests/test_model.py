@@ -21,7 +21,3 @@ def test_model() -> None:
         config.experiment.batch_size,
         N_IMAGENET_MINI_CLASS,
     ]
-
-
-if __name__ == "__main__":
-    test_model()

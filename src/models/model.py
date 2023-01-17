@@ -16,21 +16,24 @@ class ResNeSt(LightningModule):
         self.model = timm.create_model(self.params.model, pretrained=False)
         self.model.apply(init_weights)
         self.criterion = getattr(torch.nn, self.params.criterion)()
+        self.logsoftmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.model(x)
 
+    @torch.jit.ignore
     def training_step(
         self, batch: List[torch.Tensor], batch_idx: int
     ) -> Union[torch.Tensor, Dict[str, Any], None]:
         x, y = batch
         y_pred = self(x)
-        y_pred = nn.LogSoftmax(dim=1)(y_pred)
+        y_pred = self.logsoftmax(y_pred)
         loss = self.criterion(y_pred, y)
         self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, sync_dist=True, logger=True)
 
         return loss
 
+    @torch.jit.ignore
     def validation_step(
         self, batch: List[torch.Tensor], batch_idx: int
     ) -> Union[torch.Tensor, Dict[str, Any], None]:
@@ -40,6 +43,7 @@ class ResNeSt(LightningModule):
 
         return {"val_loss": loss, "val_accuracy": accuracy}
 
+    @torch.jit.ignore
     def test_step(
         self, batch: List[torch.Tensor], batch_idx: int
     ) -> Union[torch.Tensor, Dict[str, Any], None]:
@@ -49,22 +53,24 @@ class ResNeSt(LightningModule):
 
         return {"test_loss": loss, "test_accuracy": accuracy}
 
+    @torch.jit.ignore
     def _shared_eval_step(
         self, batch: List[torch.Tensor]
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         x, y = batch
         y_pred = self(x)
-        y_pred = nn.LogSoftmax(dim=1)(y_pred)
+        y_pred = self.logsoftmax(y_pred)
         loss = self.criterion(y_pred, y)
 
         ps = torch.exp(y_pred)
         _, top_class = ps.topk(1, dim=1)
         equals = top_class == y.view(*top_class.shape)
-        accuracy = torch.mean(equals.type(torch.FloatTensor))
+        accuracy = torch.mean(equals.type(torch.float))
 
         return loss, accuracy
 
-    def configure_optimizers(self) -> dict:
+    @torch.jit.ignore
+    def configure_optimizers(self):
         optimizer = getattr(optim, self.params.optimizer)(
             self.model.parameters(),
             lr=self.params.lr,
