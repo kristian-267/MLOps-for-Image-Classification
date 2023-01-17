@@ -8,6 +8,7 @@ import yaml
 from omegaconf import OmegaConf
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.profilers import PyTorchProfiler
+from pytorch_lightning.strategies import DDPStrategy
 from torch.profiler import ProfilerActivity
 from yaml.loader import SafeLoader
 
@@ -79,6 +80,8 @@ def train(config: omegaconf.DictConfig) -> None:
     )
     '''
 
+    ddp = DDPStrategy(process_group_backend="nccl")
+
     trainer = pl.Trainer(
         default_root_dir=paths.log_path + hparams.name,
         logger=wandb_logger,
@@ -86,6 +89,7 @@ def train(config: omegaconf.DictConfig) -> None:
         # profiler=profiler,
         devices=hparams.device,
         accelerator=hparams.accelerator,
+        strategy=ddp,
         auto_lr_find=hparams.auto_lr_find,
         auto_scale_batch_size=hparams.auto_scale_batch_size,
         max_epochs=hparams.max_epochs,

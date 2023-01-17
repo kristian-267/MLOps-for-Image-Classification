@@ -175,7 +175,7 @@ point on the checklist for the exam.
 - [ ] Setup monitoring for the system telemetry of your deployed model
 - [x] Setup monitoring for the performance of your deployed model
 - [x] If applicable, play around with distributed data loading
-- [ ] If applicable, play around with distributed model training
+- [x] If applicable, play around with distributed model training
 - [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed
 
 ### Additional
