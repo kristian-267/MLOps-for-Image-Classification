@@ -18,7 +18,7 @@ num_sanity: 0
 precision: bf16
 
 momentum: 0.9
-lr: 0.04
+lr: 0.2
 lr_monitor: val_loss
 lr_mode: min
 lr_patience: 3

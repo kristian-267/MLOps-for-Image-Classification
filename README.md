@@ -176,7 +176,7 @@ point on the checklist for the exam.
 - [x] Setup monitoring for the performance of your deployed model
 - [x] If applicable, play around with distributed data loading
 - [x] If applicable, play around with distributed model training
-- [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed
+- [x] Play around with quantization, compilation and pruning for you trained models to increase inference speed
 
 ### Additional
 

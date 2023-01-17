@@ -9,6 +9,7 @@ from omegaconf import OmegaConf
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.profilers import PyTorchProfiler
 from pytorch_lightning.strategies import DDPStrategy
+from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, ModelPruning, QuantizationAwareTraining
 from torch.profiler import ProfilerActivity
 from yaml.loader import SafeLoader
 
@@ -32,7 +33,7 @@ def train(config: omegaconf.DictConfig) -> None:
     )
 
     wandb.init()
-    wandb.run.name = config.experiment.name + f"_decay_{wandb.config.decay}"
+    wandb.run.name = config.experiment.name + f"_decay_{wandb.config.decay:.6f}"
     wandb.config.update(
         OmegaConf.to_container(
             config.experiment, resolve=True, throw_on_missing=True
@@ -50,18 +51,21 @@ def train(config: omegaconf.DictConfig) -> None:
 
     wandb_logger.watch(model, log_freq=config.wandb.log_freq)
 
-    checkpoint_callback = pl.callbacks.ModelCheckpoint(
+    checkpoint_callback = ModelCheckpoint(
         dirpath=paths.model_path + hparams.name,
+        filename="{epoch:02d}-{val_accuracy:.2f}",
         monitor=hparams.monitor,
         mode=hparams.monitor_mode,
         every_n_epochs=hparams.check_every_n_epoch,
     )
-    early_stopping_callback = pl.callbacks.EarlyStopping(
+    early_stopping_callback = EarlyStopping(
         monitor=hparams.monitor,
         patience=hparams.es_patience,
         verbose=True,
         mode=hparams.monitor_mode,
     )
+    pruning = ModelPruning("l1_unstructured")
+    quantization = QuantizationAwareTraining()
 
     '''
     profiler = PyTorchProfiler(
@@ -98,7 +102,7 @@ def train(config: omegaconf.DictConfig) -> None:
         precision=hparams.precision,
         val_check_interval=hparams.val_check_interval,
         limit_val_batches=hparams.limit_val_batches,
-        callbacks=[checkpoint_callback, early_stopping_callback],
+        callbacks=[checkpoint_callback, early_stopping_callback, pruning, quantization],
     )
     trainer.fit(model=model, datamodule=datamodule)
 

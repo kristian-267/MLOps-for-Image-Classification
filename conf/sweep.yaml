@@ -6,7 +6,7 @@ metric:
 parameters:
   decay:
     min: 0.0001
-    max: 0.01
+    max: 0.001
 run_cap: 5
 command:
   - ${env}
