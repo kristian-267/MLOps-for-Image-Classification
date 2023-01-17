@@ -25,33 +25,61 @@ The model we expect to use is [ResNeSt](https://arxiv.org/pdf/2004.08955.pdf). I
 ## Project Implementation
 Configure Environment:
 ```
-pip install -r requirement
+pip install -r requirements
+pip install -r requirements_tests
+```
+or
+```
+make requirements
 ```
 
-Download and make the dataset:
+Download the data:
 ```
-python src/data/make_dataset.py data/processed/
+dvc pull
 ```
+or download from: https://www.kaggle.com/datasets/ifigotin/imagenetmini-1000
 
 Train the model:
 ```
 python src/models/train_model.py
 ```
-
-Test the model:
+or
 ```
-python src/models/predict_model.py models/trained_model.pt
+make train
+```
+
+Inference:
+```
+python src/models/predict_model.py
+```
+or
+```
+make predict
 ```
 
 Run unittest with coverage
 ```
-coverage run --source=src/ -m pytest tests/
+coverage run --source=./src -m pytest tests/
 ```
+or
+```
+make tests
+```
+
 ## Project Organization
 
     ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
+    │
+    ├── Makefile           <- Makefile with commands like `make train`.
+    │
     ├── README.md          <- The top-level README for developers using this project.
+    │
+    ├── app                <- A fastapi to do inference.
+    │
+    ├── conf
+    │   ├── data           <- Configurations for dataset.
+    │   └── experiment     <- Configurations for training.
+    │
     ├── data
     │   ├── external       <- Data from third party sources.
     │   ├── interim        <- Intermediate data that has been transformed.
@@ -59,6 +87,8 @@ coverage run --source=src/ -m pytest tests/
     │   └── raw            <- The original, immutable data dump.
     │
     ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
+    │
+    ├── model_store        <- Applications for local and cloud deployment.
     │
     ├── models             <- Trained and serialized models, model predictions, or model summaries
     │
@@ -75,6 +105,7 @@ coverage run --source=src/ -m pytest tests/
     │                         generated with `pip freeze > requirements.txt`
     │
     ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
+    │
     ├── src                <- Source code for use in this project.
     │   ├── __init__.py    <- Makes src a Python module
     │   │
@@ -91,6 +122,8 @@ coverage run --source=src/ -m pytest tests/
     │   │
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize.py
+    │
+    ├── tests              <- Unit tests code
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
@@ -140,7 +173,7 @@ point on the checklist for the exam.
 
 - [ ] Check how robust your model is towards data drifting
 - [ ] Setup monitoring for the system telemetry of your deployed model
-- [ ] Setup monitoring for the performance of your deployed model
+- [x] Setup monitoring for the performance of your deployed model
 - [ ] If applicable, play around with distributed data loading
 - [ ] If applicable, play around with distributed model training
 - [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed
