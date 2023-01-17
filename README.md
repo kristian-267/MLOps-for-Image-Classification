@@ -172,7 +172,7 @@ point on the checklist for the exam.
 ### Week 3
 
 - [ ] Check how robust your model is towards data drifting
-- [ ] Setup monitoring for the system telemetry of your deployed model
+- [x] Setup monitoring for the system telemetry of your deployed model
 - [x] Setup monitoring for the performance of your deployed model
 - [x] If applicable, play around with distributed data loading
 - [x] If applicable, play around with distributed model training

@@ -34,6 +34,10 @@ train: requirements
 tests: requirements
 	coverage run --source=./src -m pytest tests/
 
+## Run api
+api:
+	OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318/" OTEL_SERVICE_NAME="dtu-mlops-group7" python -m uvicorn app.predict_image:app --reload
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete
