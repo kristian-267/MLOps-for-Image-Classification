@@ -11,3 +11,7 @@ scheduler: ReduceLROnPlateau
 hydra:
   job:
     chdir: False
+
+paths:
+  processed_data_path: "data/processed/"
+  model_path: "models/"

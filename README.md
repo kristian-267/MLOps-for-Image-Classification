@@ -33,13 +33,13 @@ or
 make requirements
 ```
 
-Download the data:
+Download data and models:
 ```
 dvc pull
 ```
-or download from: https://www.kaggle.com/datasets/ifigotin/imagenetmini-1000
+or download data from: https://www.kaggle.com/datasets/ifigotin/imagenetmini-1000
 
-Train the model:
+Train model:
 ```
 python src/models/train_model.py
 ```
@@ -64,6 +64,11 @@ coverage run --source=./src -m pytest tests/
 or
 ```
 make tests
+```
+
+create api (need [Signoz](https://signoz.io))
+```
+make api
 ```
 
 ## Project Organization

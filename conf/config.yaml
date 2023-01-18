@@ -1,11 +1,11 @@
 defaults:
     - data: imagenet-mini
-    - experiment: exp_4
+    - experiment: exp4
 
 paths:
   raw_data_path: "data/raw/"
   processed_data_path: "data/processed/"
-  external_data_path: "data/raw/"
+  external_data_path: "data/external/"
   visual_path: "reports/figures/"
   model_path: "models/"
   log_path: "logs/"
