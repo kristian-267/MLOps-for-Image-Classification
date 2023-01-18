@@ -92,7 +92,7 @@ be installed with `pip install click markdown`.
 > *complete copy of our development enviroment, one would have to run the following commands*
 >
 > Answer:
-
+> We used requirements.txt and requirement_test.txt for managing our dependencies. These two files include all the dependencies and their versions, this way the new team member would know what to install. Additionally, a README.md file with clear instructions on how to set up the development environment, including any setup commands, would be helpful for a new team member. 
 --- question 4 fill here ---
 
 ### Question 5
