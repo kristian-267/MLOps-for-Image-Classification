@@ -6,24 +6,9 @@ import torch
 import numpy as np
 from pydantic import BaseModel
 from loguru import logger
-from opentelemetry import trace
-from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
-    OTLPSpanExporter,
-)
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-
-# set up tracing and open telemetry
-provider = TracerProvider()
-processor = BatchSpanProcessor(OTLPSpanExporter())
-provider.add_span_processor(processor)
-trace.set_tracer_provider(provider)
-tracer = trace.get_tracer(__name__)
 
 app = FastAPI()
-FastAPIInstrumentor.instrument_app(app)
 
 class ResponseModel(BaseModel):
     filename: str
@@ -75,7 +60,7 @@ def predict():
     return label
 
 def mapping_to_label(top_class):
-    with open('app/index_to_name.json') as f:
+    with open('index_to_name.json') as f:
         data = json.load(f)
         f.close()
     

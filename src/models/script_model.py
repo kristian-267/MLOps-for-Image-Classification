@@ -8,11 +8,9 @@ def main():
     hydra.initialize(config_path="../conf", job_name="predict")
     config = compose(config_name='predict.yaml')
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    model = ResNeSt.load_from_checkpoint("models/model.ckpt", map_location=device, hparams=config)
+    model = ResNeSt.load_from_checkpoint(config.paths.model_path + "model.ckpt", map_location=torch.device("cpu"), hparams=config)
     script_model = model.to_torchscript(method='script')
-    torch.jit.save(script_model, "model_store/deployable_model.pt")
+    torch.jit.save(script_model, config.paths.model_path + "deployable_model.pt")
 
 
 if __name__ == "__main__":
