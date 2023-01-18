@@ -29,7 +29,9 @@ requirements: test_environment
 ## Make Train
 train: requirements
 	$(PYTHON_INTERPRETER) src/models/train_model.py
-
+## Make predict
+predict: requirements
+	$(PYTHON_INTERPRETER) src/models/predict_model.py
 ## Make Tests
 tests: requirements
 	coverage run --source=./src -m pytest tests/
