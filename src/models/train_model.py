@@ -53,10 +53,11 @@ def train(config: omegaconf.DictConfig) -> None:
 
     checkpoint_callback = ModelCheckpoint(
         dirpath=paths.model_path + hparams.name,
-        filename="{epoch:02d}-{val_accuracy:.2f}",
+        filename="{epoch:02d}-{val_accuracy:.4f}",
         monitor=hparams.monitor,
         mode=hparams.monitor_mode,
         every_n_epochs=hparams.check_every_n_epoch,
+        save_on_train_epoch_end=False,
     )
     early_stopping_callback = EarlyStopping(
         monitor=hparams.monitor,
@@ -84,8 +85,6 @@ def train(config: omegaconf.DictConfig) -> None:
     )
     '''
 
-    ddp = DDPStrategy(process_group_backend="nccl")
-
     trainer = pl.Trainer(
         default_root_dir=paths.log_path + hparams.name,
         logger=wandb_logger,
@@ -93,15 +92,11 @@ def train(config: omegaconf.DictConfig) -> None:
         # profiler=profiler,
         devices=hparams.device,
         accelerator=hparams.accelerator,
-        strategy=ddp,
-        auto_lr_find=hparams.auto_lr_find,
-        auto_scale_batch_size=hparams.auto_scale_batch_size,
+        precision=hparams.precision,
         max_epochs=hparams.max_epochs,
         max_steps=hparams.max_steps,
         num_sanity_val_steps=hparams.num_sanity,
-        precision=hparams.precision,
         val_check_interval=hparams.val_check_interval,
-        limit_val_batches=hparams.limit_val_batches,
         callbacks=[checkpoint_callback, early_stopping_callback, pruning, quantization],
     )
     trainer.fit(model=model, datamodule=datamodule)

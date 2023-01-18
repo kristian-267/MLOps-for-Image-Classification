@@ -12,6 +12,7 @@ model_bucket = client.get_bucket(MODEL_BUCKET_NAME)
 model_blob = model_bucket.get_blob(MODEL_FILE)
 model_blob.download_to_filename('/tmp/model.pt')
 model = torch.jit.load('/tmp/model.pt')
+model.eval()
 
 
 def resnest_classifier(request):
@@ -19,7 +20,7 @@ def resnest_classifier(request):
     request_json = request.get_json()
     results = {}
     if request_json and 'operation' in request_json:
-        if request_json['operation'] == "prediction":
+        if request_json['operation'] == "predict":
             image_blobs = client.list_blobs(IMAGE_BUCKET_NAME)
             for image_blob in image_blobs:
                 if image_blob.name != IMAGE_BUCKET_NAME:
@@ -40,7 +41,7 @@ def resnest_classifier(request):
                     ps = torch.exp(y_pred)
                     _, top_class = ps.topk(1, dim=1)
 
-                    results.update({image_blob.name: top_class.item()})
+                    results.update({'filename': image_blob.name, 'label': top_class.item()})
         else:
             return 'No such operation'
     else:

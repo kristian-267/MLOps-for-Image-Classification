@@ -5,7 +5,7 @@ import torch
 
 
 def main():
-    hydra.initialize(config_path="../conf", job_name="prediction_app")
+    hydra.initialize(config_path="../conf", job_name="predict")
     config = compose(config_name='predict.yaml')
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

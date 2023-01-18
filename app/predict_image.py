@@ -1,11 +1,9 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import RedirectResponse
+import json
 import cv2
 import torch
 import numpy as np
-from src.models.model import ResNeSt
-import hydra
-from hydra import compose
 from pydantic import BaseModel
 from loguru import logger
 from opentelemetry import trace
@@ -31,7 +29,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class ResponseModel(BaseModel):
     filename: str
-    label: int
+    label: str
 
 
 @app.get("/")
@@ -40,35 +38,26 @@ async def root():
 
 @app.post("/predict/", response_model=ResponseModel)
 async def predict(data: UploadFile = File(...)):
-    with open('temp.jpg', 'wb') as image:
+    with open('tmp/temp.jpg', 'wb') as image:
         logger.info("Received image file")
         filename = data.filename
         content = await data.read()
         image.write(content)
         image.close()
     
-    top_class = predict()
+    label = predict()
     logger.info("Made prediction")
 
-    response = ResponseModel(filename=filename, label=top_class)
+    response = ResponseModel(filename=filename, label=label)
     logger.info("Built response")
 
     return response
 
 def predict():
-    hydra.initialize(config_path="../conf", job_name="predict")
-    config = compose(config_name='predict.yaml')
-
-    image_path = 'temp.jpg'
-    top_class = predict_step(config, image_path)
-
-    return top_class
-
-def predict_step(config, image_path):
-    model = ResNeSt.load_from_checkpoint("models/model.ckpt", map_location=device, hparams=config)
+    model = torch.jit.load('model_store/deployable_model.pt')
     model.eval()
 
-    img = cv2.imread(image_path, cv2.IMREAD_COLOR)
+    img = cv2.imread('/tmp/temp.jpg', cv2.IMREAD_COLOR)
     img = cv2.resize(img, (224, 224))
 
     MEAN = 255 * np.array([0.485, 0.456, 0.406])
@@ -85,4 +74,15 @@ def predict_step(config, image_path):
     ps = torch.exp(y_pred)
     _, top_class = ps.topk(1, dim=1)
 
-    return top_class.item()
+    label = mapping_to_label(top_class.item())
+
+    return label
+
+def mapping_to_label(top_class):
+    with open('app/index_to_name.json') as f:
+        data = json.load(f)
+        f.close()
+    
+    label = data[str(top_class)][1]
+    
+    return label
