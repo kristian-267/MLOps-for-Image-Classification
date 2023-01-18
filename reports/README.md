@@ -90,10 +90,10 @@ be installed with `pip install click markdown`.
 > Example:
 > *We used ... for managing our dependencies. The list of dependencies was auto-generated using ... . To get a*
 > *complete copy of our development enviroment, one would have to run the following commands*
->
-> Answer:
 
 --- question 4 fill here ---
+> Answer:
+> We used requirements.txt and requirement_test.txt for managing our dependencies. These two files include all the dependencies and their versions, this way the new team member would know what to install. Additionally, a README.md file with clear instructions on how to set up the development environment, including any setup commands, would be helpful for a new team member. 
 
 ### Question 5
 
@@ -106,9 +106,10 @@ be installed with `pip install click markdown`.
 > *From the cookiecutter template we have filled out the ... , ... and ... folder. We have removed the ... folder*
 > *because we did not use any ... in our project. We have added an ... folder that contains ... for running our*
 > *experiments.*
-> Answer:
 
 --- question 5 fill here ---
+> Answer: From the cookiecutter template we have filled out the src, reports folder and reformat conf.py in docs folder. We have removed the notebooks, references and models folder because we did not use any contents of them in our project. We have added an app, conf, model_store and tests folder that contains FastAPI, configurations, data drifting detector and units tets for data and model for running our experiments.
+
 
 ### Question 6
 
