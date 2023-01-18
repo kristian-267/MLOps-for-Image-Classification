@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
+import multiprocessing
 import os
 from pathlib import Path
-import multiprocessing
+
 import omegaconf
 import pytorch_lightning as pl
 import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-from typing import Optional
 
 CROPSIZE = 224
 RESIZE = 256
@@ -44,7 +44,6 @@ class DataModule(pl.LightningDataModule):
         self.batch_size = config.experiment.batch_size
         self.threads = multiprocessing.cpu_count()
 
-
     def prepare_data(self) -> None:
         # load raw data and save
         train_dataset = datasets.ImageFolder(
@@ -77,15 +76,37 @@ class DataModule(pl.LightningDataModule):
             return self.predict
 
     def train_dataloader(self) -> DataLoader:
-        return DataLoader(self.train, batch_size=self.batch_size, shuffle=True, num_workers=self.threads, pin_memory=True)
+        return DataLoader(
+            self.train,
+            batch_size=self.batch_size,
+            shuffle=True,
+            num_workers=self.threads,
+            pin_memory=True,
+        )
 
     def val_dataloader(self) -> DataLoader:
-        return DataLoader(self.val, batch_size=self.batch_size, shuffle=False, num_workers=self.threads, pin_memory=True)
+        return DataLoader(
+            self.val,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.threads,
+            pin_memory=True,
+        )
 
     def test_dataloader(self) -> DataLoader:
-        return DataLoader(self.test, batch_size=self.batch_size, shuffle=False, num_workers=self.threads, pin_memory=True)
+        return DataLoader(
+            self.test,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.threads,
+            pin_memory=True,
+        )
 
     def predict_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.predict, batch_size=self.batch_size, shuffle=False, num_workers=self.threads, pin_memory=True
+            self.predict,
+            batch_size=self.batch_size,
+            shuffle=False,
+            num_workers=self.threads,
+            pin_memory=True,
         )

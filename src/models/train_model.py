@@ -3,14 +3,19 @@ from pathlib import Path
 import hydra
 import omegaconf
 import pytorch_lightning as pl
-import torch
+# import torch
 import yaml
 from omegaconf import OmegaConf
+from pytorch_lightning.callbacks import (
+    EarlyStopping, ModelCheckpoint
+)
+# from pytorch_lightning.callbacks import (
+# ModelPruning, QuantizationAwareTraining
+# )
 from pytorch_lightning.loggers import WandbLogger
-from pytorch_lightning.profilers import PyTorchProfiler
-from pytorch_lightning.strategies import DDPStrategy
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, ModelPruning, QuantizationAwareTraining
-from torch.profiler import ProfilerActivity
+# from pytorch_lightning.profilers import PyTorchProfiler
+# from pytorch_lightning.strategies import DDPStrategy
+# from torch.profiler import ProfilerActivity
 from yaml.loader import SafeLoader
 
 import wandb
@@ -33,7 +38,9 @@ def train(config: omegaconf.DictConfig) -> None:
     )
 
     wandb.init()
-    wandb.run.name = config.experiment.name + f"_decay_{wandb.config.decay:.6f}"
+    wandb.run.name = (
+        config.experiment.name + f"_decay_{wandb.config.decay:.6f}"
+    )
     wandb.config.update(
         OmegaConf.to_container(
             config.experiment, resolve=True, throw_on_missing=True
@@ -65,10 +72,11 @@ def train(config: omegaconf.DictConfig) -> None:
         verbose=True,
         mode=hparams.monitor_mode,
     )
+
+    """
     pruning = ModelPruning("random_unstructured")
     quantization = QuantizationAwareTraining()
 
-    '''
     profiler = PyTorchProfiler(
         dirpath=paths.profile_path + hparams.name,
         activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
@@ -83,7 +91,7 @@ def train(config: omegaconf.DictConfig) -> None:
             ),
         }
     )
-    '''
+    """
 
     trainer = pl.Trainer(
         default_root_dir=paths.log_path + hparams.name,

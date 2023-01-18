@@ -1,15 +1,16 @@
-import hydra
-from hydra import compose
-import torch
+import glob
+import json
 import logging
-from src.data.make_dataset import CROPSIZE, IMGNET_MEAN, IMGNET_STD
+import os
+
 import click
 import cv2
-import glob
-import os
+import hydra
 import numpy as np
-import json
+import torch
+from hydra import compose
 
+from src.data.make_dataset import CROPSIZE, IMGNET_MEAN, IMGNET_STD
 
 IMAGE_EXT = [".png", "jpg", ".jpeg", ".PNG", ".JPG", ".JPEG"]
 
@@ -27,7 +28,7 @@ log = logging.getLogger(__name__)
 @click.argument("input_filepath", type=click.Path(exists=True))
 def predict(input_filepath) -> None:
     hydra.initialize(config_path="../conf", job_name="predict")
-    config = compose(config_name='predict.yaml')
+    config = compose(config_name="predict.yaml")
     paths = config.paths
 
     files = glob.glob(input_filepath + "/*.*")
@@ -53,7 +54,7 @@ def predict(input_filepath) -> None:
         else:
             log("It's not an image file!")
 
-    model = torch.jit.load(paths.model_path + 'deployable_model.pt')
+    model = torch.jit.load(paths.model_path + "deployable_model.pt")
     model.to(device)
     model.eval()
 
@@ -69,11 +70,12 @@ def predict(input_filepath) -> None:
 
         print(f"The prediction result of image {label} is: {outcome}\n")
 
+
 def mapping_to_outcome(top_class):
-    with open('app/index_to_name.json') as f:
+    with open("app/index_to_name.json") as f:
         data = json.load(f)
         f.close()
-    
+
     outcome = data[str(top_class)][1]
 
     return outcome

@@ -1,12 +1,8 @@
 from hydra import compose, initialize
 
 from src.data.make_dataset import DataModule
-from tests import (
-    IMAGENET_MINI_SHAPE,
-    N_IMAGENET_MINI_CLASS,
-    N_IMAGENET_MINI_TRAIN,
-    N_IMAGENET_MINI_VAL,
-)
+from tests import (IMAGENET_MINI_SHAPE, N_IMAGENET_MINI_CLASS,
+                   N_IMAGENET_MINI_TRAIN, N_IMAGENET_MINI_VAL)
 
 
 def test_data() -> None:

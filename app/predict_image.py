@@ -1,19 +1,18 @@
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import RedirectResponse
 import json
+
 import cv2
-import torch
 import numpy as np
-from pydantic import BaseModel
+import torch
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import RedirectResponse
 from loguru import logger
 from opentelemetry import trace
-from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
-    OTLPSpanExporter,
-)
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import \
+    OTLPSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
+from pydantic import BaseModel
 
 # set up tracing and open telemetry
 provider = TracerProvider()
@@ -25,6 +24,7 @@ tracer = trace.get_tracer(__name__)
 app = FastAPI()
 FastAPIInstrumentor.instrument_app(app)
 
+
 class ResponseModel(BaseModel):
     filename: str
     label: str
@@ -34,16 +34,17 @@ class ResponseModel(BaseModel):
 async def root():
     return RedirectResponse("/docs")
 
+
 @app.post("/predict/", response_model=ResponseModel)
 async def predict(data: UploadFile = File(...)):
-    with open('tmp/temp.jpg', 'wb') as image:
+    with open("tmp/temp.jpg", "wb") as image:
         logger.info("Received image file")
         filename = data.filename
         content = await data.read()
         image.write(content)
         image.close()
-    
-    label = predict()
+
+    label = predict_step()
     logger.info("Made prediction")
 
     response = ResponseModel(filename=filename, label=label)
@@ -51,11 +52,12 @@ async def predict(data: UploadFile = File(...)):
 
     return response
 
-def predict():
-    model = torch.jit.load('models/deployable_model.pt')
+
+def predict_step():
+    model = torch.jit.load("models/deployable_model.pt")
     model.eval()
 
-    img = cv2.imread('/tmp/temp.jpg', cv2.IMREAD_COLOR)
+    img = cv2.imread("/tmp/temp.jpg", cv2.IMREAD_COLOR)
     img = cv2.resize(img, (224, 224))
 
     MEAN = 255 * np.array([0.485, 0.456, 0.406])
@@ -74,11 +76,12 @@ def predict():
 
     return label
 
+
 def mapping_to_label(top_class):
-    with open('app/index_to_name.json') as f:
+    with open("app/index_to_name.json") as f:
         data = json.load(f)
         f.close()
-    
+
     label = data[str(top_class)][1]
-    
+
     return label
