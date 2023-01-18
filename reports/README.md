@@ -47,9 +47,11 @@ be installed with `pip install click markdown`.
 ### Question 1
 > **Enter the group number you signed up on <learn.inside.dtu.dk>**
 >
+> Answer:
 
 --- question 1 fill here ---
-Answer: Group-7
+> Group-7
+
 ### Question 2
 > **Enter the study number for each member in the group**
 >
@@ -58,8 +60,9 @@ Answer: Group-7
 > *sXXXXXX, sXXXXXX, sXXXXXX*
 >
 > Answer:
+
 --- question 2 fill here ---
-s212661, s225521, s212634, s220726
+> s212661, s225521, s212634, s220726
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
 >
