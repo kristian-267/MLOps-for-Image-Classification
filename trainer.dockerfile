@@ -13,6 +13,8 @@ COPY data.dvc data.dvc
 COPY models.dvc models.dvc
 COPY src/ src/
 COPY tests/ tests/
+COPY conf/ conf/
+COPY app/ app/
 COPY .dvc/ .dvc/
 
 WORKDIR /

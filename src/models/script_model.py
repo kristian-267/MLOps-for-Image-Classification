@@ -5,7 +5,7 @@ import torch
 
 
 def main():
-    hydra.initialize(config_path="../conf", job_name="predict")
+    hydra.initialize(config_path="../../conf", job_name="predict")
     config = compose(config_name='predict.yaml')
 
     model = ResNeSt.load_from_checkpoint(config.paths.model_path + "model.ckpt", map_location=torch.device("cpu"), hparams=config)

@@ -1,84 +1,83 @@
-from pathlib import Path
-
 import hydra
-import omegaconf
-import pytorch_lightning as pl
+from hydra import compose
 import torch
-import yaml
-from omegaconf import OmegaConf
-from pytorch_lightning.loggers import WandbLogger
-from pytorch_lightning.profilers import PyTorchProfiler
-from pytorch_lightning.strategies import DDPStrategy
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, ModelPruning, QuantizationAwareTraining
-from torch.profiler import ProfilerActivity
-from yaml.loader import SafeLoader
-
-import wandb
-from src.data.make_dataset import DataModule
-from src.models.model import ResNeSt
+import logging
+from src.data.make_dataset import CROPSIZE, IMGNET_MEAN, IMGNET_STD
+import click
+import cv2
+import glob
+import os
+import numpy as np
+import json
 
 
-@hydra.main(config_path="../../conf", config_name="predict.yaml")
-def predict(config: omegaconf.DictConfig) -> None:
+IMAGE_EXT = [".png", "jpg", ".jpeg", ".PNG", ".JPG", ".JPEG"]
+
+if torch.backends.mps.is_available():
+    device = torch.device("mps")
+elif torch.cuda.is_available():
+    device = torch.device("cuda")
+else:
+    device = torch.device("cpu")
+
+log = logging.getLogger(__name__)
+
+
+@click.command()
+@click.argument("input_filepath", type=click.Path(exists=True))
+def predict(input_filepath) -> None:
+    hydra.initialize(config_path="../conf", job_name="predict")
+    config = compose(config_name='predict.yaml')
     paths = config.paths
 
-    datamodule = DataModule(config)
-    model = ResNeSt(hparams)
+    files = glob.glob(input_filepath + "/*.*")
+    images = []
+    labels = []
+    for file in files:
+        filename, file_extension = os.path.splitext(file)
+        if file_extension in IMAGE_EXT:
+            img = cv2.imread(file)
+            img = cv2.resize(img, (CROPSIZE, CROPSIZE))
 
-    checkpoint_callback = ModelCheckpoint(
-        dirpath=paths.model_path + hparams.name,
-        filename="{epoch:02d}-{val_accuracy:.4f}",
-        monitor=hparams.monitor,
-        mode=hparams.monitor_mode,
-        every_n_epochs=hparams.check_every_n_epoch,
-        save_on_train_epoch_end=False,
-    )
-    early_stopping_callback = EarlyStopping(
-        monitor=hparams.monitor,
-        patience=hparams.es_patience,
-        verbose=True,
-        mode=hparams.monitor_mode,
-    )
-    pruning = ModelPruning("l1_unstructured")
-    quantization = QuantizationAwareTraining()
+            MEAN = 255 * np.array(IMGNET_MEAN)
+            STD = 255 * np.array(IMGNET_STD)
 
-    '''
-    profiler = PyTorchProfiler(
-        dirpath=paths.profile_path + hparams.name,
-        activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
-        **{
-            "schedule": torch.profiler.schedule(
-                skip_first=0, wait=0, warmup=198, active=2, repeat=1
-            ),
-            "record_shapes": True,
-            "profile_memory": True,
-            "on_trace_ready": torch.profiler.tensorboard_trace_handler(
-                paths.profile_path + hparams.name
-            ),
-        }
-    )
-    '''
+            img = (img - MEAN) / STD
+            img = img.T
+            img = img[np.newaxis, :, :, :]
+            img = torch.from_numpy(img).float()
 
-    trainer = pl.Trainer(
-        default_root_dir=paths.log_path + hparams.name,
-        logger=wandb_logger,
-        log_every_n_steps=hparams.log_freq,
-        # profiler=profiler,
-        devices=hparams.device,
-        accelerator=hparams.accelerator,
-        precision=hparams.precision,
-        max_epochs=hparams.max_epochs,
-        max_steps=hparams.max_steps,
-        num_sanity_val_steps=hparams.num_sanity,
-        val_check_interval=hparams.val_check_interval,
-        callbacks=[checkpoint_callback, early_stopping_callback, pruning, quantization],
-    )
-    trainer.fit(model=model, datamodule=datamodule)
+            images.append(img.to(device))
+            labels.append(filename)
 
+        else:
+            log("It's not an image file!")
 
-def main():
-    predict()
+    model = torch.jit.load(paths.model_path + 'deployable_model.pt')
+    model.to(device)
+    model.eval()
+
+    for i in range(len(images)):
+        image = images[i]
+        label = labels[i]
+
+        output = model(image)
+        ps = torch.exp(output)
+        _, top_class = ps.topk(1, dim=1)
+
+        outcome = mapping_to_outcome(top_class.item())
+
+        print(f"The prediction result of image {label} is: {outcome}\n")
+
+def mapping_to_outcome(top_class):
+    with open('app/index_to_name.json') as f:
+        data = json.load(f)
+        f.close()
+    
+    outcome = data[str(top_class)][1]
+
+    return outcome
 
 
 if __name__ == "__main__":
-    main()
+    predict()
