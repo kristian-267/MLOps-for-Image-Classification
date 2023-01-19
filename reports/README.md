@@ -234,7 +234,11 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
---- question 13 fill here ---
+The hyperparameters are automatically saved based on the output of the model. For this, we used WandB, where the hyperparameters of the config file are stored, and thus the experiments are saved and any lost of information or overwritting is unlikely to happen. This can be seen in the function of the train_model.py file:
+  
+   wandb_logger = WandbLogger(
+        save_dir=paths.log_path + config.experiment.name,
+        log_model=config.wandb.log_model,
 
 ### Question 14
 
