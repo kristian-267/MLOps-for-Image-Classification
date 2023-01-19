@@ -190,7 +190,11 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
---- question 12 fill here ---
+> The hyperparameters are loaded from /conf/config.yaml . We can modify the hyperparameters in this file accordingly for the model training. We import this configuration into the train_model.py file in src/models/. The hyperparameters are passed through the function 
+>```
+>@hydra.main(config_path="../../conf", config_name="config.yaml")
+>```
+> Argparser was not needed since we used hydra.
 
 ### Question 13
 
@@ -205,7 +209,13 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
---- question 13 fill here ---
+> The hyperparameters are automatically saved based on the output of the model. For this, we used WandB, where the hyperparameters of the config file are stored, and thus the experiments are saved and any lost of information or overwritting is unlikely to happen. This can be seen in the function of the train_model.py file:
+  
+>   ```
+>   wandb_logger = WandbLogger(
+>        save_dir=paths.log_path + config.experiment.name,
+>        log_model=config.wandb.log_model,
+>   ```
 
 ### Question 14
 
@@ -221,8 +231,11 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
+> The most interesting tracking info are the train/val loss and train/val accuracy graphs. These metrics show how performant is our model. The figure below shows a comparison between the different experiments performance. The loss function tells us if the learning of the model is well, it also gives us some parameters such as the number of epochs.
+>![](figures/wandb_charts.png)
 
---- question 14 fill here ---
+> As shown in the figure below, the training data and information are stored such as batch_size, model name, experiment name, max_epochs etc. These sets of data are logged for all runs.
+>![](figures/wandb_metadata.png)
 
 ### Question 15
 
@@ -237,7 +250,11 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
---- question 15 fill here ---
+> To ease reproducibility, we use Docker. Two docker images are built, one for [train](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/trainer.dockerfile) and the other for [predict](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/predict_image.dockerfile)
+> We did not use local docker, instead, we used Gcloud container. We also used the predict_image.dockerfile for Cloud prediction/deployment using FastAPI image with Cloud run. The link can be found here []()
+>  ```
+>  docker build -f trainer.dockerfile . -t train:latest
+>  ```
 
 ### Question 16
 
@@ -252,7 +269,8 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
---- question 16 fill here ---
+> Most of the debugging was made through the Editor/IDE, in Visual Studio Code. In VSC, we go through the code line by line and fix any error that arises accordingly. We also used PyTorch profiling as it can be seen in the [train_model](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/src/models/train_model.py) file. The image below shows that the convulution functions are the ones that use most of the memory. It is difficult to profile the code, especially with such a large dataset, because the majority of computations is made elsewhere.
+>  ![](figures/pytorch_profiling.png)
 
 ## Working in the cloud
 
