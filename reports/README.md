@@ -410,10 +410,12 @@ Argparser was not needed since we used hydra.
 >
 > *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
->
-> Answer:
+
 
 --- question 25 fill here ---
+
+> Answer: 
+![Alt text](figures/Pipeline.png?raw=true "overview")
 
 ### Question 26
 
