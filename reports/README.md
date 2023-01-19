@@ -254,8 +254,11 @@ The hyperparameters are automatically saved based on the output of the model. Fo
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
+The most interesting tracking info are the train/val loss and train/val accuracy graphs. These metrics show how performant is our model. The figure below shows a comparison between the different experiments performance. The loss function tells us if the learning of the model is well, it also gives us some parameters such as the number of epochs.
+![](figures/wandb_charts.png)
 
---- question 14 fill here ---
+As shown in the figure below, the training data and information are stored such as batch_size, model name, experiment name, max_epochs etc. These sets of data are logged for all runs.
+![](figures/wandb_metadata.png)
 
 ### Question 15
 
