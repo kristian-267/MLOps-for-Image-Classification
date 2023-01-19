@@ -415,7 +415,7 @@ Argparser was not needed since we used hydra.
 --- question 25 fill here ---
 
 > Answer: 
-![Alt text](figures/Pipeline.png?raw=true "overview")
+[Pipeline](figures/Pipeline.png)
 
 ### Question 26
 
@@ -447,3 +447,6 @@ Argparser was not needed since we used hydra.
 > Answer:
 
 --- question 27 fill here ---
+
+
+[def]: figures/Pipeline.png?raw=true "overview"
