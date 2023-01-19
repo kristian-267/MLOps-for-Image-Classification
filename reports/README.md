@@ -429,10 +429,9 @@ Argparser was not needed since we used hydra.
 >
 > Example:
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
->
-> Answer:
 
 --- question 26 fill here ---
+> Answer:The biggest challenges in the project for was setting up the GCP environment. This included creating and configuring GCP projects, setting up IAM roles and permissions, and creating and configuring the various GCP services that we used. This process was time-consuming and required a significant amount of effort to ensure that everything was set up correctly. To overcome this challenge, we took a step-by-step approach, testing each service individually before moving on to the next one. We also read carefully of the documentation and tutorials to understand the services and how to use them.
 
 ### Question 27
 
