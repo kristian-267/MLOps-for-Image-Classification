@@ -118,10 +118,9 @@ be installed with `pip install click markdown`.
 >
 > Answer length: 50-100 words.
 >
+> Answer:
 
 --- question 6 fill here ---
-
-> answer: We followed pep8 guidelines for code formatting and used tool like flake8 to check the code. We also use black and isort to format and sort imports for consistent and readable code. These concepts matter in larger projects because it helps to ensure that the code is maintainable, readable and consistent, making it easier for others to understand and work with the code. Additionally, these tools helped us identify and fix issues, improve collaboration and ensure that the code is maintainable over time.
 
 ## Version control
 
@@ -133,53 +132,35 @@ be installed with `pip install click markdown`.
 > **How many tests did you implement?**
 >
 > Answer:
-
-
+We have two kinds of unit tests. One is testing for data and the other is for model. 
+For the data part, we want to make sure the shape of training set and validation set can be fitted into the regulated shape defined in the model, and the length of labeled class categories are the same as defined in the model; for the model part, we want to make sure that the shape of the output is the same as we wanted.
 
 ### Question 8
 
 > **What is the total code coverage (in percentage) of your code? If you code had an code coverage of 100% (or close**
 > **to), would you still trust it to be error free? Explain you reasoning.**
 >
-> **Answer length: 100-200 words.**
->
-> Example:
-> *The total code coverage of code is X%, which includes all our source code. We are far from 100% coverage of our **
-> *code and even if we were then...*
->
 > Answer:
-
---- question 8 fill here ---
+The total code coverage is about 40%, which includes all our source code and far from 100%. Even if our coverage can reach a higher level such as 100%, there's still possibilities that our codes aren't error free. Because we only implemented unit tests, where codes are separated into small units and checked if each small functions correctly, and we lack an integration test to evaluate if the model functions correctly so each separate units collaborate well, or an end-to-end test to check out if our codes could run on other terminals.
+> *code and even if we were then...*
 
 ### Question 9
 
 > **Did you workflow include using branches and pull requests? If yes, explain how. If not, explain how branches and**
 > **pull request can help improve version control.**
 >
-> Answer length: 100-200 words.
->
-> Example:
-> *We made use of both branches and PRs in our project. In our group, each member had an branch that they worked on in*
-> *addition to the main branch. To merge code we ...*
->
 > Answer:
-
---- question 9 fill here ---
+No, we didn't use branches, since we split tasks to work parallelly. We have used pull requests to get everything up to date everytime before we picking up work on it.  
+Braches can improve our team work in the way that if we want to experiment some new codes but also hope to prevent this from polluting and causing conflicts with our current codes, or if we want to create something independently and later decide if we want to have it included in the main project. By creating a "branch" from the "main", we could consistantly only dedicated to updating the branch without the risk of interrupting the major ongoing work. 
 
 ### Question 10
 
 > **Did you use DVC for managing data in your project? If yes, then how did it improve your project to have version**
 > **control of your data. If no, explain a case where it would be beneficial to have version control of your data.**
 >
-> Answer length: 100-200 words.
->
-> Example:
-> *We did make use of DVC in the following way: ... . In the end it helped us in ... for controlling ... part of our*
-> *pipeline*
->
 > Answer:
-
---- question 10 fill here ---
+Yes, we have used DVC for original data, training data and trained best performed model storage. 
+Since we have committed each update of our data and trained model, we could trace the performance of the best model based on each dataset. The original dataset has keeps updating and each process of training is based on different training set, DVC makes it accessible to compare and restore datasets.
 
 ### Question 11
 
@@ -187,15 +168,10 @@ be installed with `pip install click markdown`.
 > **multiple operating systems, python version etc. Do you make use of caching? Feel free to insert a link to one of**
 > **your github actions workflow.**
 >
-> Answer length: 200-300 words.
->
-> Example:
-> *We have organized our CI into 3 separate files: one for doing ..., one for running ... testing and one for running*
-> *... . In particular for our ..., we used ... .An example of a triggered workflow can be seen here: <weblink>*
->
 > Answer:
-
---- question 11 fill here ---
+We have organized our CI into 5 separate files: Docker Image CI, Run black, Run flake8, Run isort, and Run tests. While black, flake8 and isort functions to check and format the codes and order files alphabetically, Docker Image CI builds a new docker image into the dockerhub everytime when there's an update, and the Run tests workflow functions to trigger unittesting from pytest and report a coverage rate.
+Cache is applied to store the downloaded packages from the workflow, so that it wouldn't be downloaded everytime we make an update.
+An example of a triggered workflow can be seen here: https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/.github/workflows/docker.yml
 
 ## Running code and tracking experiments
 
@@ -214,12 +190,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
-> The hyperparameters are loaded from /conf/config.yaml . We can modify the hyperparameters in this file accordingly for the model training. We import this configuration into the train_model.py file in src/models/. The hyperparameters are passed through the function 
-
-@hydra.main(config_path="../../conf", config_name="config.yaml")
-
-
-Argparser was not needed since we used hydra.
+--- question 12 fill here ---
 
 ### Question 13
 
@@ -234,11 +205,7 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
-> The hyperparameters are automatically saved based on the output of the model. For this, we used WandB, where the hyperparameters of the config file are stored, and thus the experiments are saved and any lost of information or overwritting is unlikely to happen. This can be seen in the function of the train_model.py file:
-  
-   wandb_logger = WandbLogger(
-        save_dir=paths.log_path + config.experiment.name,
-        log_model=config.wandb.log_model,
+--- question 13 fill here ---
 
 ### Question 14
 
@@ -254,11 +221,8 @@ Argparser was not needed since we used hydra.
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
-> The most interesting tracking info are the train/val loss and train/val accuracy graphs. These metrics show how performant is our model. The figure below shows a comparison between the different experiments performance. The loss function tells us if the learning of the model is well, it also gives us some parameters such as the number of epochs.
-![](figures/wandb_charts.png)
 
-> As shown in the figure below, the training data and information are stored such as batch_size, model name, experiment name, max_epochs etc. These sets of data are logged for all runs.
-![](figures/wandb_metadata.png)
+--- question 14 fill here ---
 
 ### Question 15
 
@@ -273,10 +237,7 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
-> To ease reproducibility, we use Docker. Two docker images are built, one for [train](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/trainer.dockerfile) and the other for [predict](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/predict_image.dockerfile)
-> The Docker image can be built using:
-  
-  docker build -f trainer.dockerfile . -t train:latest
+--- question 15 fill here ---
 
 ### Question 16
 
@@ -308,9 +269,7 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
-> *We used the following seven services: Engine, Container, Trigger, Buckets, Cloud Functions, Cloud Run and Monitoring. Engine is used for train model, Container is used for storage pushed *
-> *dockers,Trigger is used for auto build and push docker, Buckets is used for cloud store of large data and trained models, Cloud Functions is used for serverless deployment of inference, *
-> *Cloud Run is used for deployment of our inference application and Monitoring is used for setting alerts on big error number and latency.*
+--- question 17 fill here ---
 
 ### Question 18
 
@@ -325,8 +284,7 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
-> *We used the compute engine to run our ResNeSt model to classify images from ImageNet mini dataset. We used instances with the following hardware: CPU: n1-standard-1, GPU: 1 x NVIDIA V100, *
-> *Disk size: 50 GB, and we started the training using a custom container: gcr.io/dtu-mlops-group7/gcp_vm_trainer, which stored in Container and includes nessarary files and dependencies.*
+--- question 18 fill here ---
 
 ### Question 19
 
@@ -335,9 +293,7 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
-```markdown
-![buckets](figures/bucket-group7.png)
-```
+--- question 19 fill here ---
 
 ### Question 20
 
@@ -346,9 +302,7 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
-```markdown
-![container registry](figures/registry-group7.png)
-```
+--- question 20 fill here ---
 
 ### Question 21
 
@@ -357,9 +311,7 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
-```markdown
-![cloud build](figures/build-group7.png)
-```
+--- question 21 fill here ---
 
 ### Question 22
 
@@ -375,14 +327,7 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
-> *For deployment we wrapped our model into application using local and cloud methods. We first tried locally serving the model, which began from building a prediction app using FastAPI. In this *
-> *API, we send post request to upload an image file, then api returns the response, which including the label prediction result of this image. After that, we tried using Torchserve to deploy the *
-> *model. To save space and running time, we scripted model using `torch.jit`, then call `torchserve` to transfer model to .mar format and locally deploy it. For cloud deployment, we used two gcp *
-> *services: We deployed a serverless predictor in Cloud Function and a predictor app in Cloud Run built from docker stored in Container. To use serverless predictor, To invoke the Cloud Run *
-> *service, one can open this url to upload image file and execute inference: *
-> *`https://gcp-vm-predictor-56ipobkfaa-ew.a.run.app`*
-> *To use serverless predictor, an user would call: *
-> *`curl -m 70 -X POST https://europe-west1-dtu-mlops-group7.cloudfunctions.net/predictor -H "Authorization: bearer $(gcloud auth print-identity-token)" -H "Content-Type: application/json" -d '{"prediction": "True"}'`*
+--- question 22 fill here ---
 
 ### Question 23
 
@@ -397,10 +342,7 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
-> *We did manage to implement monitoring. For local deployment, we integrated opentelemetry into FastAPI-based prediction app we deployed before and used Signoz to monitor its varies metrics. *
-> *To let it work, first open docker desktop and run container named clickhouse-setup, then navigate to `http://localhost:3301` and run command `OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318/" OTEL_SERVICE_NAME="dtu-mlops-group7" python -m uvicorn app.predict_image:app --reload`, afterwards you can see dtu-mlops-group7 application pop out from Signoz page and click it to see monitor *
-> *results. For cloud deployment, we set Alerting in GCP Monitor service to monitor error number for predictor function and latency metrics for gcp-vm-predictor service, those metrics are useful for *
-> *us knowing the running conditions of our application.*
+--- question 23 fill here ---
 
 ### Question 24
 
@@ -432,12 +374,10 @@ Argparser was not needed since we used hydra.
 >
 > *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
-
+>
+> Answer:
 
 --- question 25 fill here ---
-
-> Answer: 
-![Alt text](figures/Pipeline.png?raw=true "overview")
 
 ### Question 26
 
@@ -448,9 +388,10 @@ Argparser was not needed since we used hydra.
 >
 > Example:
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
+>
+> Answer:
 
 --- question 26 fill here ---
-> Answer:The biggest challenges in the project for was setting up the GCP environment. This included creating and configuring GCP projects, setting up IAM roles and permissions, and creating and configuring the various GCP services that we used. This process was time-consuming and required a significant amount of effort to ensure that everything was set up correctly. To overcome this challenge, we took a step-by-step approach, testing each service individually before moving on to the next one. We also read carefully of the documentation and tutorials to understand the services and how to use them.
 
 ### Question 27
 
@@ -464,6 +405,7 @@ Argparser was not needed since we used hydra.
 > *docker containers for training our applications.*
 > *Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards.*
 > *All members contributed to code by...*
+>
+> Answer:
 
 --- question 27 fill here ---
-> Answer: Student s212634 was in charge of developing of setting up the initial cookie cutter project and the coding environment. Student s212661 was in charge of training our models in the cloud and deploying them afterwards. Student s225521 was in charge of using version control(Git) to track changes to the code and using DVC for managing data. Student s220726 was in charge of running code and tracking experiments and developing of the docker containers for training our applications.
