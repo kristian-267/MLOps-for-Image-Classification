@@ -214,7 +214,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
-The hyperparameters are loaded from /conf/config.yaml . We can modify the hyperparameters in this file accordingly for the model training. We import this configuration into the train_model.py file in src/models/. The hyperparameters are passed through the function 
+> The hyperparameters are loaded from /conf/config.yaml . We can modify the hyperparameters in this file accordingly for the model training. We import this configuration into the train_model.py file in src/models/. The hyperparameters are passed through the function 
 
 @hydra.main(config_path="../../conf", config_name="config.yaml")
 
@@ -234,7 +234,7 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
-The hyperparameters are automatically saved based on the output of the model. For this, we used WandB, where the hyperparameters of the config file are stored, and thus the experiments are saved and any lost of information or overwritting is unlikely to happen. This can be seen in the function of the train_model.py file:
+> The hyperparameters are automatically saved based on the output of the model. For this, we used WandB, where the hyperparameters of the config file are stored, and thus the experiments are saved and any lost of information or overwritting is unlikely to happen. This can be seen in the function of the train_model.py file:
   
    wandb_logger = WandbLogger(
         save_dir=paths.log_path + config.experiment.name,
@@ -254,10 +254,10 @@ The hyperparameters are automatically saved based on the output of the model. Fo
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
-The most interesting tracking info are the train/val loss and train/val accuracy graphs. These metrics show how performant is our model. The figure below shows a comparison between the different experiments performance. The loss function tells us if the learning of the model is well, it also gives us some parameters such as the number of epochs.
+> The most interesting tracking info are the train/val loss and train/val accuracy graphs. These metrics show how performant is our model. The figure below shows a comparison between the different experiments performance. The loss function tells us if the learning of the model is well, it also gives us some parameters such as the number of epochs.
 ![](figures/wandb_charts.png)
 
-As shown in the figure below, the training data and information are stored such as batch_size, model name, experiment name, max_epochs etc. These sets of data are logged for all runs.
+> As shown in the figure below, the training data and information are stored such as batch_size, model name, experiment name, max_epochs etc. These sets of data are logged for all runs.
 ![](figures/wandb_metadata.png)
 
 ### Question 15
