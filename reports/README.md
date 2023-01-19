@@ -414,8 +414,10 @@ Argparser was not needed since we used hydra.
 
 --- question 25 fill here ---
 
-> Answer: 
 [Pipeline](figures/Pipeline.png)
+
+> Answer: 
+The diagram starts with the local setup, where we integrated tools like pep8, flake8, black, and isort into our code. Whenever we commit code and push to Github, it auto-triggers the Continuous Integration process, which runs the unit tests, and check coverage of the code. The code is then built and containerized using Docker and the built images are then stored in GCP Container Registry.
 
 ### Question 26
 
