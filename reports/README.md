@@ -317,7 +317,7 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-[buckets](figures/bucket-group7.png)
+![](figures/bucket-group7.png)
 
 ### Question 20
 
@@ -326,7 +326,7 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-[container registry](figures/registry-group7.png)
+![](figures/registry-group7.png)
 
 ### Question 21
 
@@ -335,7 +335,7 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-[cloud build](figures/build-group7.png)
+![](figures/build-group7.png)
 
 ### Question 22
 
