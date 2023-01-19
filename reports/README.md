@@ -49,7 +49,8 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
-> Group Awesome 7
+--- question 1 fill here ---
+> Group-7
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -60,6 +61,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
+--- question 2 fill here ---
 > s212661, s225521, s212634, s220726
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
@@ -72,7 +74,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
-> We used the third-party framework PyTorch Image Models in our project. We used functionality `create_model` from the `timm` package to do create ResNeSt model in our project. It did help us complete the project. Without it, we would have to build our deep learning model from scratch and we would spend a lot of time on it so that we could not better utilize our project time to do other important tasks such as continuous integration, deployment, monitoring, etc. Besides, the model we used from PyTorch Image Models framework is so great. It provides clearly structure to help us understand model and modify it in data drifting task by replace some layers to `torch.nn.Identity()` and pruning task by choosing which layer needs to do weight pruning. 
+--- question 3 fill here ---
 
 ## Coding environment
 
@@ -89,6 +91,7 @@ be installed with `pip install click markdown`.
 > *We used ... for managing our dependencies. The list of dependencies was auto-generated using ... . To get a*
 > *complete copy of our development enviroment, one would have to run the following commands*
 
+--- question 4 fill here ---
 > Answer:
 > We used requirements.txt and requirement_test.txt for managing our dependencies. These two files include all the dependencies and their versions, this way the new team member would know what to install. Additionally, a README.md file with clear instructions on how to set up the development environment, including any setup commands, would be helpful for a new team member. 
 
@@ -104,6 +107,7 @@ be installed with `pip install click markdown`.
 > *because we did not use any ... in our project. We have added an ... folder that contains ... for running our*
 > *experiments.*
 
+--- question 5 fill here ---
 > Answer: From the cookiecutter template we have filled out the src, reports folder and reformat conf.py in docs folder. We have removed the notebooks, references and models folder because we did not use any contents of them in our project. We have added an app, conf, model_store and tests folder that contains FastAPI, configurations, data drifting detector and units tets for data and model for running our experiments.
 
 
@@ -115,6 +119,7 @@ be installed with `pip install click markdown`.
 > Answer length: 50-100 words.
 >
 
+--- question 6 fill here ---
 > Answer：We followed pep8 guidelines for code formatting and used tool like flake8 to check the code. We also use black and isort to format and sort imports for consistent and readable code. These concepts matter in larger projects because it helps to ensure that the code is maintainable, readable and consistent, making it easier for others to understand and work with the code. Additionally, these tools helped us identify and fix issues, improve collaboration and ensure that the code is maintainable over time.
 
 ## Version control
@@ -127,9 +132,8 @@ be installed with `pip install click markdown`.
 > **How many tests did you implement?**
 >
 > Answer:
-> We have two kinds of unit tests. One is testing for data and the other is for model. 
-> For the data part, we want to make sure the shape of training set and validation set can be fitted into the regulated shape defined in the model, and the length of labeled class categories are 
-> the same as defined in the model; for the model part, we want to make sure that the shape of the output is the same as we wanted.
+We have two kinds of unit tests. One is testing for data and the other is for model. 
+For the data part, we want to make sure the shape of training set and validation set can be fitted into the regulated shape defined in the model, and the length of labeled class categories are the same as defined in the model; for the model part, we want to make sure that the shape of the output is the same as we wanted.
 
 ### Question 8
 
@@ -137,9 +141,7 @@ be installed with `pip install click markdown`.
 > **to), would you still trust it to be error free? Explain you reasoning.**
 >
 > Answer:
-> The total code coverage is about 40%, which includes all our source code and far from 100%. Even if our coverage can reach a higher level such as 100%, there's still possibilities that our codes 
-> aren't error free. Because we only implemented unit tests, where codes are separated into small units and checked if each small functions correctly, and we lack an integration test to evaluate if 
-> the model functions correctly so each separate units collaborate well, or an end-to-end test to check out if our codes could run on other terminals.
+The total code coverage is about 40%, which includes all our source code and far from 100%. Even if our coverage can reach a higher level such as 100%, there's still possibilities that our codes aren't error free. Because we only implemented unit tests, where codes are separated into small units and checked if each small functions correctly, and we lack an integration test to evaluate if the model functions correctly so each separate units collaborate well, or an end-to-end test to check out if our codes could run on other terminals.
 > *code and even if we were then...*
 
 ### Question 9
@@ -148,10 +150,8 @@ be installed with `pip install click markdown`.
 > **pull request can help improve version control.**
 >
 > Answer:
-> No, we didn't use branches, since we split tasks to work parallelly. We have used pull requests to get everything up to date everytime before we picking up work on it.  
-> Braches can improve our team work in the way that if we want to experiment some new codes but also hope to prevent this from polluting and causing conflicts with our current codes, or if we want to 
-> create something independently and later decide if we want to have it included in the main project. By creating a "branch" from the "main", we could consistantly only dedicated to updating the branch 
-> without the risk of interrupting the major ongoing work. 
+No, we didn't use branches, since we split tasks to work parallelly. We have used pull requests to get everything up to date everytime before we picking up work on it.  
+Braches can improve our team work in the way that if we want to experiment some new codes but also hope to prevent this from polluting and causing conflicts with our current codes, or if we want to create something independently and later decide if we want to have it included in the main project. By creating a "branch" from the "main", we could consistantly only dedicated to updating the branch without the risk of interrupting the major ongoing work. 
 
 ### Question 10
 
@@ -251,12 +251,9 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 > Answer:
 
 > To ease reproducibility, we use Docker. Two docker images are built, one for [train](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/trainer.dockerfile) and the other for [predict](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/predict_image.dockerfile)
-> We did not use local docker, instead, we used Gcloud container. We also used the predict_image.dockerfile for Cloud prediction/deployment using FastAPI image with Cloud run. The link can be found here [docker](https://console.cloud.google.com/gcr/images/dtu-mlops-group7?cloudshell=true&project=dtu-mlops-group7). We do local run our dockers by these commands:
+> We did not use local docker, instead, we used Gcloud container. We also used the predict_image.dockerfile for Cloud prediction/deployment using FastAPI image with Cloud run. The link can be found here []()
 >  ```
-> docker build -f trainer.dockerfile . -t gcp_vm_trainer:latest
-> docker run --name trainer gcp_vm_trainer
-> docker build -f prediction.dockerfile . -t predict_app
-> docker run --name predictor -p 80:80 predict_app
+>  docker build -f trainer.dockerfile . -t train:latest
 >  ```
 
 ### Question 16
@@ -290,9 +287,9 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-> We used the following seven services: Engine, Container, Trigger, Buckets, Cloud Functions, Cloud Run and Monitoring. Engine is used for train model, Container is used for storage pushed 
-> dockers,Trigger is used for auto build and push docker, Buckets is used for cloud store of large data and trained models, Cloud Functions is used for serverless deployment of inference, 
-> Cloud Run is used for deployment of our inference application and Monitoring is used for setting alerts on big error number and latency.
+> *We used the following seven services: Engine, Container, Trigger, Buckets, Cloud Functions, Cloud Run and Monitoring. Engine is used for train model, Container is used for storage pushed *
+> *dockers,Trigger is used for auto build and push docker, Buckets is used for cloud store of large data and trained models, Cloud Functions is used for serverless deployment of inference, *
+> *Cloud Run is used for deployment of our inference application and Monitoring is used for setting alerts on big error number and latency.*
 
 ### Question 18
 
@@ -307,8 +304,8 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-> We used the compute engine to run our ResNeSt model to classify images from ImageNet mini dataset. We used instances with the following hardware: CPU: n1-standard-1, GPU: 1 x NVIDIA V100, 
-> Disk size: 50 GB, and we started the training using a custom container: gcr.io/dtu-mlops-group7/gcp_vm_trainer, which stored in Container and includes nessarary files and dependencies.
+> *We used the compute engine to run our ResNeSt model to classify images from ImageNet mini dataset. We used instances with the following hardware: CPU: n1-standard-1, GPU: 1 x NVIDIA V100, *
+> *Disk size: 50 GB, and we started the training using a custom container: gcr.io/dtu-mlops-group7/gcp_vm_trainer, which stored in Container and includes nessarary files and dependencies.*
 
 ### Question 19
 
@@ -317,7 +314,9 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-> ![](figures/bucket-group7.png)
+```markdown
+[buckets](figures/bucket-group7.png)
+```
 
 ### Question 20
 
@@ -326,7 +325,9 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-> ![](figures/registry-group7.png)
+```markdown
+[container registry](figures/registry-group7.png)
+```
 
 ### Question 21
 
@@ -335,7 +336,9 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-> ![](figures/build-group7.png)
+```markdown
+[cloud build](figures/build-group7.png)
+```
 
 ### Question 22
 
@@ -351,14 +354,14 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-> For deployment we wrapped our model into application using local and cloud methods. We first tried locally serving the model, which began from building a prediction app using FastAPI. In this 
-> API, we send post request to upload an image file, then api returns the response, which including the label prediction result of this image. After that, we tried using Torchserve to deploy the 
-> model. To save space and running time, we scripted model using `torch.jit`, then call `torchserve` to transfer model to .mar format and locally deploy it. For cloud deployment, we used two gcp 
-> services: We deployed a serverless predictor in Cloud Function and a predictor app in Cloud Run built from docker stored in Container. To use serverless predictor, To invoke the Cloud Run 
-> service, one can open this url to upload image file and execute inference: 
-> `https://gcp-vm-predictor-56ipobkfaa-ew.a.run.app`
-> To use serverless predictor, an user would call: 
-> `curl -m 70 -X POST https://europe-west1-dtu-mlops-group7.cloudfunctions.net/predictor -H "Authorization: bearer $(gcloud auth print-identity-token)" -H "Content-Type: application/json" -d '{"prediction": "True"}'`
+> *For deployment we wrapped our model into application using local and cloud methods. We first tried locally serving the model, which began from building a prediction app using FastAPI. In this *
+> *API, we send post request to upload an image file, then api returns the response, which including the label prediction result of this image. After that, we tried using Torchserve to deploy the *
+> *model. To save space and running time, we scripted model using `torch.jit`, then call `torchserve` to transfer model to .mar format and locally deploy it. For cloud deployment, we used two gcp *
+> *services: We deployed a serverless predictor in Cloud Function and a predictor app in Cloud Run built from docker stored in Container. To use serverless predictor, To invoke the Cloud Run *
+> *service, one can open this url to upload image file and execute inference: *
+> *`https://gcp-vm-predictor-56ipobkfaa-ew.a.run.app`*
+> *To use serverless predictor, an user would call: *
+> *`curl -m 70 -X POST https://europe-west1-dtu-mlops-group7.cloudfunctions.net/predictor -H "Authorization: bearer $(gcloud auth print-identity-token)" -H "Content-Type: application/json" -d '{"prediction": "True"}'`*
 
 ### Question 23
 
@@ -373,10 +376,10 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-> We did manage to implement monitoring. For local deployment, we integrated opentelemetry into FastAPI-based prediction app we deployed before and used Signoz to monitor its varies metrics. 
-> To let it work, first open docker desktop and run container named clickhouse-setup, then navigate to `http://localhost:3301` and run command `OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318/" OTEL_SERVICE_NAME="dtu-mlops-group7" python -m uvicorn app.predict_image:app --reload`, afterwards you can see dtu-mlops-group7 application pop out from Signoz page and click it to see monitor 
-> results. For cloud deployment, we set Alerting in GCP Monitor service to monitor error number for predictor function and latency metrics for gcp-vm-predictor service, those metrics are useful for 
-> us knowing the running conditions of our application.
+> *We did manage to implement monitoring. For local deployment, we integrated opentelemetry into FastAPI-based prediction app we deployed before and used Signoz to monitor its varies metrics. *
+> *To let it work, first open docker desktop and run container named clickhouse-setup, then navigate to `http://localhost:3301` and run command `OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318/" OTEL_SERVICE_NAME="dtu-mlops-group7" python -m uvicorn app.predict_image:app --reload`, afterwards you can see dtu-mlops-group7 application pop out from Signoz page and click it to see monitor *
+> *results. For cloud deployment, we set Alerting in GCP Monitor service to monitor error number for predictor function and latency metrics for gcp-vm-predictor service, those metrics are useful for *
+> *us knowing the running conditions of our application.*
 
 ### Question 24
 
@@ -390,7 +393,7 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-> Group member Chuansheng Liu used $49.37, Group member Chongchong Li used $12.07, Group member Xindi Wu used $16.29, Group member Mouadh Sadani used $21.51, in total $99.24 credits was spend during development. The service Compute Engine costing the most was $41.29 due to train model on a GPU instance.
+> *Group member Chuansheng Liu used $49.37, Group member Chongchong Li used $12.07, Group member Xindi Wu used $16.29, Group member Mouadh Sadani used $21.51, in total $99.24 credits was spend during development. The service Compute Engine costing the most was $41.29 due to train model on a GPU instance.*
 
 ## Overall discussion of project
 
@@ -408,10 +411,12 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
->
-> Answer:
 
 --- question 25 fill here ---
+> Answer: 
+![Alt text](figures/Pipeline.png?raw=true "Pipeline")
+
+The starting point of the diagram is our local setup, where we integrated tools like pep8, flake8, black, and isort into our code. Whenever we commit code and push to Github, it auto-triggers the Continuous Integration process, which runs the unit tests and check coverage of the code. The code is then built and containerized using Docker and the built images are then stored in GCP Container Registry. After this, we deployed the code to the GCP using both Cloud Functions and Cloud Run. The deployed code is exposed as a RESTful API, which is accessed by the client application. Then, the api is accessed by the client application, which sends the input data to the model and receives the output. Finally, we utilized GCP monitoring and logging service to monitor the model's performance.
 
 ### Question 26
 
@@ -422,10 +427,9 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Example:
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
->
-> Answer:
 
 --- question 26 fill here ---
+> Answer:The biggest challenges in the project for was setting up the GCP environment. This included creating and configuring GCP projects, setting up IAM roles and permissions, and creating and configuring the various GCP services that we used. This process was time-consuming and required a significant amount of effort to ensure that everything was set up correctly. To overcome this challenge, we took a step-by-step approach, testing each service individually before moving on to the next one. We also read carefully of the documentation and tutorials to understand the services and how to use them.
 
 ### Question 27
 
@@ -439,7 +443,6 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 > *docker containers for training our applications.*
 > *Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards.*
 > *All members contributed to code by...*
->
-> Answer:
 
 --- question 27 fill here ---
+> Answer: Student s212634 was in charge of developing of setting up the initial cookie cutter project and the coding environment. Student s212661 was in charge of training our models in the cloud and deploying them afterwards. Student s225521 was in charge of using version control(Git) to track changes to the code and using DVC for managing data. Student s220726 was in charge of running code and tracking experiments and developing of the docker containers for training our applications.
