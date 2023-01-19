@@ -50,7 +50,7 @@ be installed with `pip install click markdown`.
 > Answer:
 
 --- question 1 fill here ---
-> Group-7
+> Group Awesome 7
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -74,7 +74,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 3 fill here ---
+> *We used the third-party framework PyTorch Image Models in our project. We used functionality `create_model` from the `timm` package to do create ResNeSt model in our project. It did help us complete the project. Without it, we would have to build our deep learning model from scratch and we would spend a lot of time on it so that we could not better utilize our project time to do other important tasks such as continuous integration, deployment, monitoring, etc. Besides, the model we used from PyTorch Image Models framework is so great. It provides clearly structure to help us understand model and modify it in data drifting task by replace some layers to `torch.nn.Identity()` and pruning task by choosing which layer needs to do weight pruning. *
 
 ## Coding environment
 
@@ -251,9 +251,12 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 > Answer:
 
 > To ease reproducibility, we use Docker. Two docker images are built, one for [train](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/trainer.dockerfile) and the other for [predict](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/predict_image.dockerfile)
-> We did not use local docker, instead, we used Gcloud container. We also used the predict_image.dockerfile for Cloud prediction/deployment using FastAPI image with Cloud run. The link can be found here []()
+> We did not use local docker, instead, we used Gcloud container. We also used the predict_image.dockerfile for Cloud prediction/deployment using FastAPI image with Cloud run. The link can be found here [docker](https://console.cloud.google.com/gcr/images/dtu-mlops-group7?cloudshell=true&project=dtu-mlops-group7). We do local run our dockers by these commands:
 >  ```
->  docker build -f trainer.dockerfile . -t train:latest
+> docker build -f trainer.dockerfile . -t gcp_vm_trainer:latest
+> docker run --name trainer gcp_vm_trainer
+> docker build -f prediction.dockerfile . -t predict_app
+> docker run --name predictor -p 80:80 predict_app
 >  ```
 
 ### Question 16
@@ -314,9 +317,7 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-```markdown
 [buckets](figures/bucket-group7.png)
-```
 
 ### Question 20
 
@@ -325,9 +326,7 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-```markdown
 [container registry](figures/registry-group7.png)
-```
 
 ### Question 21
 
@@ -336,9 +335,7 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-```markdown
 [cloud build](figures/build-group7.png)
-```
 
 ### Question 22
 
