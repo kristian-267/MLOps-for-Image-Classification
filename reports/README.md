@@ -118,9 +118,10 @@ be installed with `pip install click markdown`.
 >
 > Answer length: 50-100 words.
 >
-> Answer:
 
 --- question 6 fill here ---
+
+> answer: We followed pep8 guidelines for code formatting and used tool like flake8 to check the code. We also use black and isort to format and sort imports for consistent and readable code. These concepts matter in larger projects because it helps to ensure that the code is maintainable, readable and consistent, making it easier for others to understand and work with the code. Additionally, these tools helped us identify and fix issues, improve collaboration and ensure that the code is maintainable over time.
 
 ## Version control
 
