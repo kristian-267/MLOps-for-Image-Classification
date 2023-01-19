@@ -8,7 +8,7 @@ RUN apt update && \
 
 COPY requirements.txt requirements.txt
 COPY setup.py setup.py
-COPY models/ models/
+COPY models/deployable_model.pt models/deployable_model.pt
 COPY src/ src/
 COPY conf/ conf/
 
@@ -18,4 +18,4 @@ COPY app/ app/
 
 WORKDIR /
 
-CMD ["uvicorn", "app.predict_image:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "app.cloud_deployment:app", "--host", "0.0.0.0", "--port", "80"]

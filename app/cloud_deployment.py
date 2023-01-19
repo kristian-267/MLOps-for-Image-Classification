@@ -64,7 +64,7 @@ def predict_step():
 
 
 def mapping_to_label(top_class):
-    with open("index_to_name.json") as f:
+    with open("app/index_to_name.json") as f:
         data = json.load(f)
         f.close()
 

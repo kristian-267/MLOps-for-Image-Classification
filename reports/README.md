@@ -292,7 +292,9 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 17 fill here ---
+> *We used the following seven services: Engine, Container, Trigger, Buckets, Cloud Functions, Cloud Run and Monitoring. Engine is used for train model, Container is used for storage pushed *
+> *dockers,Trigger is used for auto build and push docker, Buckets is used for cloud store of large data and trained models, Cloud Functions is used for serverless deployment of inference, *
+> *Cloud Run is used for deployment of our inference application and Monitoring is used for setting alerts on big error number and latency.*
 
 ### Question 18
 
@@ -307,7 +309,8 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 18 fill here ---
+> *We used the compute engine to run our ResNeSt model to classify images from ImageNet mini dataset. We used instances with the following hardware: CPU: n1-standard-1, GPU: 1 x NVIDIA V100, *
+> *Disk size: 50 GB, and we started the training using a custom container: gcr.io/dtu-mlops-group7/gcp_vm_trainer, which stored in Container and includes nessarary files and dependencies.*
 
 ### Question 19
 
@@ -316,7 +319,9 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 19 fill here ---
+```markdown
+![buckets](figures/bucket-group7.png)
+```
 
 ### Question 20
 
@@ -325,7 +330,9 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 20 fill here ---
+```markdown
+![container registry](figures/registry-group7.png)
+```
 
 ### Question 21
 
@@ -334,7 +341,9 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 21 fill here ---
+```markdown
+![cloud build](figures/build-group7.png)
+```
 
 ### Question 22
 
@@ -350,7 +359,14 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 22 fill here ---
+> *For deployment we wrapped our model into application using local and cloud methods. We first tried locally serving the model, which began from building a prediction app using FastAPI. In this *
+> *API, we send post request to upload an image file, then api returns the response, which including the label prediction result of this image. After that, we tried using Torchserve to deploy the *
+> *model. To save space and running time, we scripted model using `torch.jit`, then call `torchserve` to transfer model to .mar format and locally deploy it. For cloud deployment, we used two gcp *
+> *services: We deployed a serverless predictor in Cloud Function and a predictor app in Cloud Run built from docker stored in Container. To use serverless predictor, To invoke the Cloud Run *
+> *service, one can open this url to upload image file and execute inference: *
+> *`https://gcp-vm-predictor-56ipobkfaa-ew.a.run.app`*
+> *To use serverless predictor, an user would call: *
+> *`curl -m 70 -X POST https://europe-west1-dtu-mlops-group7.cloudfunctions.net/predictor -H "Authorization: bearer $(gcloud auth print-identity-token)" -H "Content-Type: application/json" -d '{"prediction": "True"}'`*
 
 ### Question 23
 
@@ -365,7 +381,10 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 23 fill here ---
+> *We did manage to implement monitoring. For local deployment, we integrated opentelemetry into FastAPI-based prediction app we deployed before and used Signoz to monitor its varies metrics. *
+> *To let it work, first open docker desktop and run container named clickhouse-setup, then navigate to `http://localhost:3301` and run command `OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318/" OTEL_SERVICE_NAME="dtu-mlops-group7" python -m uvicorn app.predict_image:app --reload`, afterwards you can see dtu-mlops-group7 application pop out from Signoz page and click it to see monitor *
+> *results. For cloud deployment, we set Alerting in GCP Monitor service to monitor error number for predictor function and latency metrics for gcp-vm-predictor service, those metrics are useful for *
+> *us knowing the running conditions of our application.*
 
 ### Question 24
 
