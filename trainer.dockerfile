@@ -15,7 +15,7 @@ COPY src/ src/
 COPY tests/ tests/
 COPY conf/ conf/
 COPY app/ app/
-COPY .dvc/ .dvc/
+COPY .dvc/config .dvc/config
 
 WORKDIR /
 RUN pip install -r requirements.txt --no-cache-dir
