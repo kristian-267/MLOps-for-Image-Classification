@@ -118,9 +118,10 @@ be installed with `pip install click markdown`.
 >
 > Answer length: 50-100 words.
 >
-> Answer:
 
 --- question 6 fill here ---
+
+> answer: We followed pep8 guidelines for code formatting and used tool like flake8 to check the code. We also use black and isort to format and sort imports for consistent and readable code. These concepts matter in larger projects because it helps to ensure that the code is maintainable, readable and consistent, making it easier for others to understand and work with the code. Additionally, these tools helped us identify and fix issues, improve collaboration and ensure that the code is maintainable over time.
 
 ## Version control
 
@@ -213,7 +214,12 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 12 fill here ---
+> The hyperparameters are loaded from /conf/config.yaml . We can modify the hyperparameters in this file accordingly for the model training. We import this configuration into the train_model.py file in src/models/. The hyperparameters are passed through the function 
+
+@hydra.main(config_path="../../conf", config_name="config.yaml")
+
+
+Argparser was not needed since we used hydra.
 
 ### Question 13
 
@@ -228,7 +234,11 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 13 fill here ---
+> The hyperparameters are automatically saved based on the output of the model. For this, we used WandB, where the hyperparameters of the config file are stored, and thus the experiments are saved and any lost of information or overwritting is unlikely to happen. This can be seen in the function of the train_model.py file:
+  
+   wandb_logger = WandbLogger(
+        save_dir=paths.log_path + config.experiment.name,
+        log_model=config.wandb.log_model,
 
 ### Question 14
 
@@ -244,8 +254,11 @@ be installed with `pip install click markdown`.
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
+> The most interesting tracking info are the train/val loss and train/val accuracy graphs. These metrics show how performant is our model. The figure below shows a comparison between the different experiments performance. The loss function tells us if the learning of the model is well, it also gives us some parameters such as the number of epochs.
+![](figures/wandb_charts.png)
 
---- question 14 fill here ---
+> As shown in the figure below, the training data and information are stored such as batch_size, model name, experiment name, max_epochs etc. These sets of data are logged for all runs.
+![](figures/wandb_metadata.png)
 
 ### Question 15
 
@@ -260,7 +273,10 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 15 fill here ---
+> To ease reproducibility, we use Docker. Two docker images are built, one for [train](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/trainer.dockerfile) and the other for [predict](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/predict_image.dockerfile)
+> The Docker image can be built using:
+  
+  docker build -f trainer.dockerfile . -t train:latest
 
 ### Question 16
 
@@ -416,10 +432,12 @@ be installed with `pip install click markdown`.
 >
 > *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
->
-> Answer:
+
 
 --- question 25 fill here ---
+
+> Answer: 
+![Alt text](figures/Pipeline.png?raw=true "overview")
 
 ### Question 26
 
@@ -430,10 +448,9 @@ be installed with `pip install click markdown`.
 >
 > Example:
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
->
-> Answer:
 
 --- question 26 fill here ---
+> Answer:The biggest challenges in the project for was setting up the GCP environment. This included creating and configuring GCP projects, setting up IAM roles and permissions, and creating and configuring the various GCP services that we used. This process was time-consuming and required a significant amount of effort to ensure that everything was set up correctly. To overcome this challenge, we took a step-by-step approach, testing each service individually before moving on to the next one. We also read carefully of the documentation and tutorials to understand the services and how to use them.
 
 ### Question 27
 
@@ -447,7 +464,6 @@ be installed with `pip install click markdown`.
 > *docker containers for training our applications.*
 > *Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards.*
 > *All members contributed to code by...*
->
-> Answer:
 
 --- question 27 fill here ---
+> Answer: Student s212634 was in charge of developing of setting up the initial cookie cutter project and the coding environment. Student s212661 was in charge of training our models in the cloud and deploying them afterwards. Student s225521 was in charge of using version control(Git) to track changes to the code and using DVC for managing data. Student s220726 was in charge of running code and tracking experiments and developing of the docker containers for training our applications.
