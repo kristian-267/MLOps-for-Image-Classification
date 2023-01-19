@@ -273,7 +273,10 @@ Argparser was not needed since we used hydra.
 >
 > Answer:
 
---- question 15 fill here ---
+> To ease reproducibility, we use Docker. Two docker images are built, one for [train](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/trainer.dockerfile) and the other for [predict](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/predict_image.dockerfile)
+> The Docker image can be built using:
+  
+  docker build -f trainer.dockerfile . -t train:latest
 
 ### Question 16
 
@@ -411,12 +414,11 @@ Argparser was not needed since we used hydra.
 > *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
 
+
 --- question 25 fill here ---
 
-[Pipeline](figures/Pipeline.png)
-
 > Answer: 
-The diagram starts with the local setup, where we integrated tools like pep8, flake8, black, and isort into our code. Whenever we commit code and push to Github, it auto-triggers the Continuous Integration process, which runs the unit tests, and check coverage of the code. The code is then built and containerized using Docker and the built images are then stored in GCP Container Registry.
+![Alt text](figures/Pipeline.png?raw=true "overview")
 
 ### Question 26
 
@@ -448,6 +450,3 @@ The diagram starts with the local setup, where we integrated tools like pep8, fl
 > Answer:
 
 --- question 27 fill here ---
-
-
-[def]: figures/Pipeline.png?raw=true "overview"
