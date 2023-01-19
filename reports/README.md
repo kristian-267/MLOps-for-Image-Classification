@@ -213,7 +213,12 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 12 fill here ---
+The hyperparameters are loaded from /conf/config.yaml . We can modify the hyperparameters in this file accordingly for the model training. We import this configuration into the train_model.py file in src/models/. The hyperparameters are passed through the function 
+
+@hydra.main(config_path="../../conf", config_name="config.yaml")
+
+
+Argparser was not needed since we used hydra.
 
 ### Question 13
 
