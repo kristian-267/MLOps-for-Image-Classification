@@ -446,7 +446,6 @@ Argparser was not needed since we used hydra.
 > *docker containers for training our applications.*
 > *Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards.*
 > *All members contributed to code by...*
->
-> Answer:
 
 --- question 27 fill here ---
+> Answer: Student s212634 was in charge of developing of setting up the initial cookie cutter project and the coding environment. Student s212661 was in charge of training our models in the cloud and deploying them afterwards. Student s225521 was in charge of using version control(Git) to track changes to the code and using DVC for managing data. Student s220726 was in charge of running code and tracking experiments and developing of the docker containers for training our applications.
