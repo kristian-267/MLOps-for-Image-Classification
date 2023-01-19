@@ -117,10 +117,9 @@ be installed with `pip install click markdown`.
 > **concepts matters in larger projects.**
 >
 > Answer length: 50-100 words.
->
-> Answer:
 
 --- question 6 fill here ---
+> Answer: We followed pep8 guidelines for code formatting and used tool like flake8 to check the code. We also use black and isort to format and sort imports for consistent and readable code. These concepts matter in larger projects because it helps to ensure that the code is maintainable, readable and consistent, making it easier for others to understand and work with the code. Additionally, these tools helped us identify and fix issues, improve collaboration and ensure that the code is maintainable over time.
 
 ## Version control
 
@@ -374,10 +373,10 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
->
-> Answer:
 
 --- question 25 fill here ---
+> Answer: [pipeline](figures/Pipeline.png)
+The starting point of the diagram is our local setup, where we integrated tools like pep8, flake8, black, and isort into our code. Whenever we commit code and push to Github, it auto-triggers the Continuous Integration process, which runs the unit tests and check coverage of the code. The code is then built and containerized using Docker and the built images are then stored in GCP Container Registry. After this, we deployed the code to the GCP using both Cloud Functions and Cloud Run. The deployed code is exposed as a RESTful API, which is accessed by the client application. Then, the api is accessed by the client application, which sends the input data to the model and receives the output. Finally, we utilized GCP monitoring and logging service to monitor the model's performance.
 
 ### Question 26
 
@@ -388,10 +387,9 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Example:
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
->
-> Answer:
 
 --- question 26 fill here ---
+> Answer:The biggest challenges in the project for was setting up the GCP environment. This included creating and configuring GCP projects, setting up IAM roles and permissions, and creating and configuring the various GCP services that we used. This process was time-consuming and required a significant amount of effort to ensure that everything was set up correctly. To overcome this challenge, we took a step-by-step approach, testing each service individually before moving on to the next one. We also read carefully of the documentation and tutorials to understand the services and how to use them.
 
 ### Question 27
 
@@ -405,7 +403,6 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 > *docker containers for training our applications.*
 > *Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards.*
 > *All members contributed to code by...*
->
-> Answer:
 
 --- question 27 fill here ---
+> Answer: Student s212634 was in charge of developing of setting up the initial cookie cutter project and the coding environment. Student s212661 was in charge of training our models in the cloud and deploying them afterwards. Student s225521 was in charge of using version control(Git) to track changes to the code and using DVC for managing data. Student s220726 was in charge of running code and tracking experiments and developing of the docker containers for training our applications.
