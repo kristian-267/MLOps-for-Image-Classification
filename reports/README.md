@@ -375,7 +375,8 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
 
 --- question 25 fill here ---
-> Answer: [pipeline](figures/Pipeline.png)
+[pipeline](figures/Pipeline.png)
+> Answer: 
 The starting point of the diagram is our local setup, where we integrated tools like pep8, flake8, black, and isort into our code. Whenever we commit code and push to Github, it auto-triggers the Continuous Integration process, which runs the unit tests and check coverage of the code. The code is then built and containerized using Docker and the built images are then stored in GCP Container Registry. After this, we deployed the code to the GCP using both Cloud Functions and Cloud Run. The deployed code is exposed as a RESTful API, which is accessed by the client application. Then, the api is accessed by the client application, which sends the input data to the model and receives the output. Finally, we utilized GCP monitoring and logging service to monitor the model's performance.
 
 ### Question 26
