@@ -109,7 +109,7 @@ We used the PyTorch image models framework for this project. It was a great choi
 > *experiments.*
 
 --- question 5 fill here ---
-> Answer: From the cookiecutter template we have filled out the src, reports folder and reformat conf.py in docs folder. We have removed the notebooks, references and models folder because we did not use any contents of them in our project. We have added an app, conf, model_store and tests folder that contains FastAPI, configurations, data drifting detector and units tets for data and model for running our experiments.
+> Answer: From the cookiecutter template we have filled out the src/data, reports folder and reformat conf.py in docs folder. We have removed the notebook and references folder because we did not use any contents of them in our project. We have added an app, conf, model_store and tests folder that contains FastAPI, configurations, data drifting detector and units tets for data and model for running our experiments.
 
 
 ### Question 6
