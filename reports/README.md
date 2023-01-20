@@ -413,7 +413,6 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 > *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
 > *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
 
---- question 25 fill here ---
 > Answer: 
 ![Alt text](figures/Pipeline.png?raw=true "Pipeline")
 
@@ -429,7 +428,6 @@ The starting point of the diagram is our local setup, where we integrated tools 
 > Example:
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
 
---- question 26 fill here ---
 > Answer:The biggest challenges in the project for was setting up the GCP environment. This included creating and configuring GCP projects, setting up IAM roles and permissions, and creating and configuring the various GCP services that we used. This process was time-consuming and required a significant amount of effort to ensure that everything was set up correctly. To overcome this challenge, we took a step-by-step approach, testing each service individually before moving on to the next one. We also read carefully of the documentation and tutorials to understand the services and how to use them.
 
 ### Question 27
@@ -445,5 +443,4 @@ The starting point of the diagram is our local setup, where we integrated tools 
 > *Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards.*
 > *All members contributed to code by...*
 
---- question 27 fill here ---
 > Answer: Student s212634 was in charge of developing of setting up the initial cookie cutter project and the coding environment. Student s212661 was in charge of training our models in the cloud and deploying them afterwards. Student s225521 was in charge of using version control(Git) to track changes to the code and using DVC for managing data. Student s220726 was in charge of running code and tracking experiments and developing of the docker containers for training our applications.
