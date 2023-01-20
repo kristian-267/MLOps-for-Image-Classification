@@ -71,10 +71,11 @@ be installed with `pip install click markdown`.
 > Example:
 > *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
 > *package to do ... and ... in our project*.
->
-> Answer:
 
 --- question 3 fill here ---
+> Answer:
+We used the PyTorch image models framework for this project. It was a great choice as it provided pre-trained models for image classification tasks, saving us a significant amount of time and effort. Its dynamic computation graph also allowed for easy experimentation with different architectures and loss functions. PyTorch's large community and active development also helped us find solutions to any issues we encountered during the project. The framework's extensive documentation and tutorials were also very useful in understanding its functionality. Overall, PyTorch's image models framework was a great choice for our project as it provided the necessary tools and functionality to train and fine-tune models efficiently.
+
 
 ## Coding environment
 
