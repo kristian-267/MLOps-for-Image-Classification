@@ -42,6 +42,62 @@ short, too long, have you included an image when asked to.
 For both functions to work it is important that you do not rename anything. The script have two dependencies that can
 be installed with `pip install click markdown`.
 
+## Overall project checklist
+
+The checklist is *exhaustic* which means that it includes everything that you could possible do on the project in
+relation the curricilum in this course. Therefore, we do not expect at all that you have checked of all boxes at the
+end of the project.
+
+### Week 1
+
+* [x] Create a git repository
+* [x] Make sure that all team members have write access to the github repository
+* [x] Create a dedicated environment for you project to keep track of your packages
+* [x] Create the initial file structure using cookiecutter
+* [x] Fill out the `make_dataset.py` file such that it downloads whatever data you need and
+* [x] Add a model file and a training script and get that running
+* [x] Remember to fill out the `requirements.txt` file with whatever dependencies that you are using
+* [x] Remember to comply with good coding practices (`pep8`) while doing the project
+* [x] Do a bit of code typing and remember to document essential parts of your code
+* [x] Setup version control for your data or part of your data
+* [x] Construct one or multiple docker files for your code
+* [x] Build the docker files locally and make sure they work as intended
+* [x] Write one or multiple configurations files for your experiments
+* [x] Used Hydra to load the configurations and manage your hyperparameters
+* [x] When you have something that works somewhat, remember at some point to to some profiling and see if
+      you can optimize your code
+* [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code. Additionally,
+      consider running a hyperparameter optimization sweep.
+* [x] Use Pytorch-lightning (if applicable) to reduce the amount of boilerplate in your code
+
+### Week 2
+
+* [x] Write unit tests related to the data part of your code
+* [x] Write unit tests related to model construction and or model training
+* [x] Calculate the coverage.
+* [x] Get some continuous integration running on the github repository
+* [x] Create a data storage in GCP Bucket for you data and preferable link this with your data version control setup
+* [x] Create a trigger workflow for automatically building your docker images
+* [x] Get your model training in GCP using either the Engine or Vertex AI
+* [x] Create a FastAPI application that can do inference using your model
+* [x] If applicable, consider deploying the model locally using torchserve
+* [x] Deploy your model in GCP using either Functions or Run as the backend
+
+### Week 3
+
+* [x] Check how robust your model is towards data drifting
+* [x] Setup monitoring for the system telemetry of your deployed model
+* [x] Setup monitoring for the performance of your deployed model
+* [x] If applicable, play around with distributed data loading
+* [x] If applicable, play around with distributed model training
+* [x] Play around with quantization, compilation and pruning for you trained models to increase inference speed
+
+### Additional
+
+* [x] Revisit your initial project description. Did the project turn out as you wanted?
+* [x] Make sure all group members have a understanding about all parts of the project
+* [x] Uploaded all your code to github
+
 ## Group information
 
 ### Question 1
@@ -49,7 +105,6 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 1 fill here ---
 > Group-7
 
 ### Question 2
@@ -61,8 +116,8 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 2 fill here ---
 > s212661, s225521, s212634, s220726
+
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
 >
@@ -72,10 +127,9 @@ be installed with `pip install click markdown`.
 > *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
 > *package to do ... and ... in our project*.
 
---- question 3 fill here ---
 > Answer:
-We used the PyTorch image models framework for this project. It was a great choice as it provided pre-trained models for image classification tasks, saving us a significant amount of time and effort. Its dynamic computation graph also allowed for easy experimentation with different architectures and loss functions. PyTorch's large community and active development also helped us find solutions to any issues we encountered during the project. The framework's extensive documentation and tutorials were also very useful in understanding its functionality. Overall, PyTorch's image models framework was a great choice for our project as it provided the necessary tools and functionality to train and fine-tune models efficiently.
 
+We used the PyTorch image models framework for this project. It was a great choice as it provided pre-trained models for image classification tasks, saving us a significant amount of time and effort. Its dynamic computation graph also allowed for easy experimentation with different architectures and loss functions. PyTorch's large community and active development also helped us find solutions to any issues we encountered during the project. The framework's extensive documentation and tutorials were also very useful in understanding its functionality. Overall, PyTorch's image models framework was a great choice for our project as it provided the necessary tools and functionality to train and fine-tune models efficiently.
 
 ## Coding environment
 
@@ -94,6 +148,7 @@ We used the PyTorch image models framework for this project. It was a great choi
 
 --- question 4 fill here ---
 > Answer:
+
 > We used requirements.txt and requirement_test.txt for managing our dependencies. These two files include all the dependencies and their versions, this way the new team member would know what to install. Additionally, a README.md file with clear instructions on how to set up the development environment, including any setup commands, would be helpful for a new team member. 
 
 ### Question 5
@@ -111,7 +166,6 @@ We used the PyTorch image models framework for this project. It was a great choi
 --- question 5 fill here ---
 > Answer: From the cookiecutter template we have filled out the src/data, reports folder and reformat conf.py in docs folder. We have removed the notebook and references folder because we did not use any contents of them in our project. We have added an app, conf, model_store and tests folder that contains FastAPI, configurations, data drifting detector and units tets for data and model for running our experiments.
 
-
 ### Question 6
 
 > **Did you implement any rules for code quality and format? Additionally, explain with your own words why these**
@@ -119,9 +173,8 @@ We used the PyTorch image models framework for this project. It was a great choi
 >
 > Answer length: 50-100 words.
 >
-
---- question 6 fill here ---
-> Answer：We followed pep8 guidelines for code formatting and used tool like flake8 to check the code. We also use black and isort to format and sort imports for consistent and readable code. These concepts matter in larger projects because it helps to ensure that the code is maintainable, readable and consistent, making it easier for others to understand and work with the code. Additionally, these tools helped us identify and fix issues, improve collaboration and ensure that the code is maintainable over time.
+> Answer:
+We followed pep8 guidelines for code formatting and used tool like flake8 to check the code. We also use black and isort to format and sort imports for consistent and readable code. These concepts matter in larger projects because it helps to ensure that the code is maintainable, readable and consistent, making it easier for others to understand and work with the code. Additionally, these tools helped us identify and fix issues, improve collaboration and ensure that the code is maintainable over time.
 
 ## Version control
 

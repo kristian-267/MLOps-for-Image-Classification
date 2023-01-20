@@ -46,7 +46,7 @@ deployment:
 
 ## Check report
 check_report:
-	$(PYTHON_INTERPRETER) reports/report.py check
+	/Users/kristianruud/opt/anaconda3/envs/dtu_mlops/bin/python reports/report.py check
 
 ## Delete all compiled Python files
 clean:

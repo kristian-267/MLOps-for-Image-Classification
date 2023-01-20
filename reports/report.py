@@ -33,7 +33,7 @@ def html():
 
 @cli.command()
 def check():
-    with open("README.md", "r") as file:
+    with open("reports/README.md", "r") as file:
         text = file.read()
     text = text[43:]  # remove header
 
@@ -116,6 +116,7 @@ def check():
         partial(length_constraints, min=50, max=200),
     ]
     if len(answers) != 27:
+        print(len(answers))
         raise ValueError(
             "Number of answers are different from the expected 27. Have you filled out every field?"
         )
@@ -125,4 +126,5 @@ def check():
 
 
 if __name__ == "__main__":
+    check()
     cli()
