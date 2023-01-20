@@ -102,7 +102,12 @@ def train(config: omegaconf.DictConfig) -> None:
         max_steps=hparams.max_steps,
         num_sanity_val_steps=hparams.num_sanity,
         val_check_interval=hparams.val_check_interval,
-        callbacks=[checkpoint_callback, early_stopping_callback, pruning, quantization],
+        callbacks=[
+            checkpoint_callback, 
+            early_stopping_callback, 
+            pruning, 
+            quantization,
+        ],
     )
     trainer.fit(model=model, datamodule=datamodule)
 
