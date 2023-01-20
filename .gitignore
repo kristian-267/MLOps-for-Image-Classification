@@ -158,3 +158,4 @@ dmypy.json
 /outputs
 /logs
 /tmp
+/.dvcignore
