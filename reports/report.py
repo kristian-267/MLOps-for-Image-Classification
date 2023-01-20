@@ -33,7 +33,7 @@ def html():
 
 @cli.command()
 def check():
-    with open("reports/README.md", "r") as file:
+    with open("README.md", "r") as file:
         text = file.read()
     text = text[43:]  # remove header
 
@@ -126,5 +126,4 @@ def check():
 
 
 if __name__ == "__main__":
-    check()
     cli()
