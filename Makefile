@@ -44,6 +44,10 @@ api:
 deployment:
 	torch-model-archiver --model-name resnest_model --version 1.0 --serialized-file model_store/deployable_model.pt --export-path model_store --extra-files app/index_to_name.json --handler image_classifier
 
+## Check report
+check_report:
+	$(PYTHON_INTERPRETER) reports/report.py check
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete
