@@ -3,19 +3,18 @@ from pathlib import Path
 import hydra
 import omegaconf
 import pytorch_lightning as pl
-# import torch
+import torch
 import yaml
 from omegaconf import OmegaConf
 from pytorch_lightning.callbacks import (
     EarlyStopping, ModelCheckpoint
 )
-# from pytorch_lightning.callbacks import (
-# ModelPruning, QuantizationAwareTraining
-# )
+from pytorch_lightning.callbacks import (
+    ModelPruning, QuantizationAwareTraining
+)
 from pytorch_lightning.loggers import WandbLogger
-# from pytorch_lightning.profilers import PyTorchProfiler
-# from pytorch_lightning.strategies import DDPStrategy
-# from torch.profiler import ProfilerActivity
+from pytorch_lightning.profilers import PyTorchProfiler
+from torch.profiler import ProfilerActivity
 from yaml.loader import SafeLoader
 
 import wandb
@@ -73,7 +72,6 @@ def train(config: omegaconf.DictConfig) -> None:
         mode=hparams.monitor_mode,
     )
 
-    """
     pruning = ModelPruning("random_unstructured")
     quantization = QuantizationAwareTraining()
 
@@ -91,13 +89,12 @@ def train(config: omegaconf.DictConfig) -> None:
             ),
         }
     )
-    """
 
     trainer = pl.Trainer(
         default_root_dir=paths.log_path + hparams.name,
         logger=wandb_logger,
         log_every_n_steps=hparams.log_freq,
-        # profiler=profiler,
+        profiler=profiler,
         devices=hparams.device,
         accelerator=hparams.accelerator,
         precision=hparams.precision,
@@ -105,7 +102,7 @@ def train(config: omegaconf.DictConfig) -> None:
         max_steps=hparams.max_steps,
         num_sanity_val_steps=hparams.num_sanity,
         val_check_interval=hparams.val_check_interval,
-        callbacks=[checkpoint_callback, early_stopping_callback],
+        callbacks=[checkpoint_callback, early_stopping_callback, pruning, quantization],
     )
     trainer.fit(model=model, datamodule=datamodule)
 

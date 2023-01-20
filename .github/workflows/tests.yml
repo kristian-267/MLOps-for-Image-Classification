@@ -52,7 +52,7 @@ jobs:
         pip install -r requirements_tests.txt
     - name: Get data
       run:
-        dvc pull -f
+        dvc pull
     - name: Test with pytest and generate report
       run: |
         coverage run --source=./src -m pytest tests/
