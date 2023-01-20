@@ -270,7 +270,7 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 >
 > Answer:
 
-> Most of the debugging was made through the Editor/IDE, in Visual Studio Code. In VSC, we go through the code line by line and fix any error that arises accordingly. We also used PyTorch profiling as it can be seen in the [train_model](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/src/models/train_model.py) file. The image below shows that the convulution functions are the ones that use most of the memory. It is difficult to profile the code, especially with such a large dataset, because the majority of computations is made elsewhere.
+> Most of the debugging was made through the Editor/IDE, in Visual Studio Code. In VSC, we go through the code line by line and fix any error that arises accordingly. We also used PyTorch profiling as it can be seen in the [train_model](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/src/models/train_model.py) file. The image below shows that the convolution functions are the ones that use most of the memory. It is difficult to profile the code, especially with such a large dataset, because the majority of computations is made elsewhere.
 >  ![](figures/pytorch_profiling.png)
 
 ## Working in the cloud
