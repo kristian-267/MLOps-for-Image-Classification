@@ -151,11 +151,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-/models
-/data
 /profiles
 /wandb
 /outputs
 /logs
 /tmp
 /.dvcignore
+/data
+/models
