@@ -305,9 +305,13 @@ An example of a triggered workflow can be seen here: https://github.com/kristian
 > Answer:
 
 > To ease reproducibility, we use Docker. Two docker images are built, one for [train](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/trainer.dockerfile) and the other for [predict](https://github.com/kristian-267/DTU-MLOps-Group7/blob/main/predict_image.dockerfile)
-> We did not use local docker, instead, we used Gcloud container. We also used the predict_image.dockerfile for Cloud prediction/deployment using FastAPI image with Cloud run. The link can be found here []()
+> We did not use local docker, instead, we used Gcloud container. We also used the predict_image.dockerfile for Cloud prediction/deployment using FastAPI image with Cloud run. The link can be found here [docker](https://console.cloud.google.com/gcr/images/dtu-mlops-group7?cloudshell=true&project=dtu-mlops-group7). We do local run our dockers by these commands:
 >  ```
->  docker build -f trainer.dockerfile . -t train:latest
+> docker build -f trainer.dockerfile . -t train:latest
+> docker build -f trainer.dockerfile . -t gcp_vm_trainer:latest
+> docker run --name trainer gcp_vm_trainer
+> docker build -f prediction.dockerfile . -t predict_app
+> docker run --name predictor -p 80:80 predict_app
 >  ```
 
 ### Question 16
