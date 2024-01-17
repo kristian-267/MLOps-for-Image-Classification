@@ -25,11 +25,11 @@ We use [ImageNet 1000 (mini)](https://www.kaggle.com/datasets/ifigotin/imagenetm
 The model we use is [ResNeSt](https://arxiv.org/pdf/2004.08955.pdf). It is a ResNet variant which stacking several Split-Attention blocks (conposed by featuremap group and split attention operations). It is easy to work with, computational efficient, and universally improves the learned feature representations to boost performance across image classification.
 
 ## Installation
-- Copy repository:
+- **Copy repository**:
 ```bash
 git clone https://github.com/kristian-267/MLOps-for-Image-Classification.git
 ```
-- Configure Environment:
+- **Configure Environment**:
 ```bash
 cd MLOps-for-Image-Classification
 pip install -r requirements
@@ -39,14 +39,14 @@ or
 ```bash
 make requirements
 ```
-- Download data:
+- **Download data**:
 ```bash
 dvc pull
 ```
 or download data from: https://www.kaggle.com/datasets/ifigotin/imagenetmini-1000
 
 ## Usage
-- Train model:
+- **Train model**:
 ```bash
 python src/models/train_model.py
 ```
@@ -54,7 +54,7 @@ or
 ```bash
 make train
 ```
-- Inference:
+- **Inference**:
 ```bash
 python src/models/predict_model.py
 ```
@@ -62,7 +62,7 @@ or
 ```bash
 make predict
 ```
-- Run unittest with coverage
+- **Run unittests with coverage**
 ```bash
 coverage run --source=./src -m pytest tests/
 ```
@@ -70,7 +70,7 @@ or
 ```bash
 make tests
 ```
-- Create API (needs [Signoz](https://signoz.io))
+- **Create API (needs [Signoz](https://signoz.io))**
 ```bash
 make api
 ```
